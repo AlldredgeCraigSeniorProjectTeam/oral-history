@@ -4,6 +4,9 @@
 ### Summary
 This is the senior project repo of Jake Alldredge and Daniel Craig. Our objective is to make and Amazon Alexa skill that interfaces with FamilySearch to collect and upload oral histories via Amazon Echo devices.
 
+The oral-history will be the portion of our project that interacts with Alexa directly. User will dictate an oral history which Alexa
+will then record and upload to FamilySearch.
+
 ## Development Environment/ Tools
  - IntelliJ IDEA
  - Java
@@ -20,10 +23,6 @@ This is the senior project repo of Jake Alldredge and Daniel Craig. Our objectiv
 ## Skills
  - Dictation of family history
  - Family memory retrieval and read
-
-## Authentication
- - Link amazon and FamilySearch?
-   - Web application
 
 ## Workflow
  - Contact Alexa
@@ -46,6 +45,7 @@ This is the senior project repo of Jake Alldredge and Daniel Craig. Our objectiv
 # Define
 
 | Term       | Definition |
+|------------|------------|
 | IAM        |            |
 | Intent     |            |
 | Invocation |            |
@@ -53,23 +53,7 @@ This is the senior project repo of Jake Alldredge and Daniel Craig. Our objectiv
 | Sample     |            |
 | Slot       |            |
 | SSML       |            |
-|            |            |
 
 # Hello World
 
 ## arn:aws:lambda:us-east-1:545339878944:function:HelloWorld
-
-
-# Clock
-
-| Date     | Description                | Time | PP |
-|----------|----------------------------|------|----|
-| 05/07/18 | Ideas                      | 0:39 | X  |
-| 05/08/18 | "                          | 0:17 | X  |
-| 05/09/18 | "                          | 0:11 | X  |
-| "        | "                          | 0:11 | X  |
-| "        | Workflow                   | 0:35 | X  |
-| "        | Environment setup          | 0:35 | X  |
-| "        | Cleaned up md              | 0:38 | X  |
-| "        | Structured directories     | 1:32 | X  |
-|          | Total                      | 8:24 |    |
