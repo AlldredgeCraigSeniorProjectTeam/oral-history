@@ -1,10 +1,11 @@
 language: generic
 deploy:
   provider: s3
-  access_key_id: AKIAIPCGCGMM5EDKYZIA
-  secret_access_key:
-    secure: Jl0xQLabbdWjyHkXVd43uDOjmqNiyDnw/pCERDG5j4t5w47VNm+EMjGUwAcVYUviKl/kP6Mm7ZbuI9R2jw8uIBufxL20DKxqAq4JjeOmVPNlOlitJOac6bWXATzuuHhRePrx3uqvJzvLWGn8SGrKUSKkvTeTLAVRtJNn45s1XEfJnI+l1sq3DEtbTchipka1zh/abrbTq/A5aTA2KmCFjaFq2CeLmL24TMp6ZihM11OwNu4XJP2CR+lWnNBLSaylUP1h0eGbY6N0n3s77ZwEVqyAWwYaS/i8e4k3traN6p8L8aPm+1MlZqV83A38zvHBran7MRXbBQNyxo9u99JGP31EFmAvfwZKn79T/1lpnUnCT6muaSznHQ/GcMVlJRNrU8NfVEhcd6JAdUFNkUHGPI0frvPJzBYyXBUacmrkLz8P9epCSdSzhp+Mu9mrpl+Zww1PjWuohmHZOGpl7bCIjgtUSYls/M3iYH8s9V18YQr4kK8MKTWqXFQ+5U4P8p+fH3HhjZNbmvz2BYifp6uoZaUO8t1j4q6gn0yShckKKe2CXLo51QcZPS1WuTcp6u/r06kv5reCmLQQyR49DS5e7p2CFRihVbTgzd0dGgZYFromdEEmhRMzopYNv+bLwN+bCICV4+wn51ywmfoGwgBlPA5ZqOTMbH8YJLuqGYvtuYg=
+  access_key_id: $s3_access_key_id
+  secret_access_key: $s3_secret_key
   bucket: alldredgecraigseniorproject
+  local-dir: src
+  upload-dir: src
   region: us-east-1
   on:
     repo: AlldredgeCraigSeniorProjectTeam/oral-history
