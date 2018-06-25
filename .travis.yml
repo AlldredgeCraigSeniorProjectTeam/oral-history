@@ -1,7 +1,6 @@
 language: generic
 before_deploy:
-- zip -j zips/index.zip src/index.py
-- zip -j zips/lambda_function.zip src/lambda_function.py
+- zip -j zips/oral_history.zip src/oralHistory.py
 deploy:
 - provider: s3
   access_key_id: $s3_access_key_id
@@ -15,10 +14,10 @@ deploy:
 - provider: lambda
   access_key_id: $s3_access_key_id
   secret_access_key: $s3_secret_key
-  function_name: "helloWorld"
-  zip: zips/lambda_function.zip
+  function_name: "oralHistory"
+  zip: zips/oral_history.zip
   region: "us-east-1"
-  role: "arn:aws:iam::523059797638:role/service-role/helloWorldRole"
+  role: "arn:aws:iam::523059797638:role/service-role/oral_history"
   runtime: "python2.7"
-  module_name: "lambda_function"
+  module_name: "oralHistory"
   handler_name: "lambda_handler"
