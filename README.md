@@ -9,7 +9,8 @@ This is the senior project repo of Jake Alldredge and Daniel Craig. Our objectiv
 The oral-history will be the portion of our project that interacts with Alexa directly. User will dictate an oral history which Alexa
 will then record and upload to FamilySearch.
 
-## Development Environment/ Tools
+# Our Stack
+### Development Environment/ Tools
  - IntelliJ IDEA
  - Java
  - Node.js
@@ -22,11 +23,11 @@ will then record and upload to FamilySearch.
    - Kinesis Fire Hose
  - Family Search APIs
 
-## Skills
- - Dictation of family history
- - Family memory retrieval and read
+# Our Alexa skill's requirements
+ - Be able to preserve dictated family stories
+ - Be able to store preserved family stories on FamilySearch 
 
-## Workflow
+# Our workflow
  - Contact Alexa
  - Creates Lex Conversation
    - lambda Looks for ancestor
@@ -44,8 +45,7 @@ will then record and upload to FamilySearch.
      - Read story
      - Return control to Lex
 
-# Define
-
+# Our team's definitions
 | Term       | Definition |
 |------------|------------|
 | IAM        |            |
@@ -55,7 +55,3 @@ will then record and upload to FamilySearch.
 | Sample     |            |
 | Slot       |            |
 | SSML       |            |
-
-# Hello World
-
-## arn:aws:lambda:us-east-1:545339878944:function:HelloWorld
