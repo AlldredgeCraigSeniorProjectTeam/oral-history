@@ -1,8 +1,9 @@
 language: generic
 before_deploy:
-- zip zips/src.zip src/helloWorld.py
+- zip -j zips/index.zip src/index.py
+- zip -j zips/lambda_function.zip src/lambda_function.py
 deploy:
-  provider: s3
+- provider: s3
   access_key_id: $s3_access_key_id
   secret_access_key: $s3_secret_key
   bucket: alldredgecraigseniorproject
@@ -11,13 +12,13 @@ deploy:
   region: us-east-1
   on:
     repo: AlldredgeCraigSeniorProjectTeam/oral-history
-after_success:
-  provider: s3
+- provider: lambda
   access_key_id: $s3_access_key_id
   secret_access_key: $s3_secret_key
-  bucket: alldredgecraigseniorproject
-  local-dir: zips
-  upload-dir: zips
-  region: us-east-1
-  on:
-    repo: AlldredgeCraigSeniorProjectTeam/oral-history
+  function_name: "helloWorld"
+  zip: zips/lambda_function.zip
+  region: "us-east-1"
+  role: "arn:aws:iam::523059797638:role/service-role/helloWorldRole"
+  runtime: "python2.7"
+  module_name: "lambda_function"
+  handler_name: "lambda_handler"
