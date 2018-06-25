@@ -48,10 +48,10 @@ will then record and upload to FamilySearch.
 # Our team's definitions
 | Term       | Definition |
 |------------|------------|
-| IAM        |            |
+| IAM        | Identity and access management.  Where AWS permissions are managed.  |
 | Intent     |            |
-| Invocation |            |
-| Lambda     |            |
+| Invoke     | The canonical term for starting the exection of a Lambda function    |
+| Lambda     | A function that runs on AWS Lambda; no need for server config, etc.  |
 | Sample     |            |
 | Slot       |            |
 | SSML       |            |
