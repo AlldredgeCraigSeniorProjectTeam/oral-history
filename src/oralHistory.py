@@ -9,7 +9,7 @@ http://amzn.to/1LGWsLG
 """
 
 from __future__ import print_function
-from random import randint as rand 
+from random import randint as rand
 
 # --------------- Helpers that build all of the responses ----------------------
 
@@ -56,7 +56,7 @@ def get_welcome_response():
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
     reprompt_text = ""
-    
+
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
@@ -150,18 +150,40 @@ def talk_about_daniel(intent, session):
     responses = [
         "Daniel is a cool guy.",
         "Daniel is good at math.",
-        "<amazon:effect name='whispered'><prosody rate='slow'>Daniel <emphasis level='strong'>REALLY</emphasis> does not like being called a butt.</prosody></amazon:effect>",
-        "Daniel is super good at programming, <amazon:effect name='whispered'> but bad at naming things</amazon:effect>"]
-    
+        "Jacob always forgets that Daniel is gluten intolerant."
+        ]
+
     speech_output = responses[rand(0,len(responses)-1)]
-    
+
     should_end_session = False
-        
+
     # Setting reprompt_text to None signifies that we do not want to reprompt
     # the user. If the user does not respond or says something that is not
     # understood, the session will end.
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
+
+def secret_about_daniel(intent, session):
+    session_attributes = {}
+    reprompt_text = None
+    card_title = "daniel"
+    responses = [
+        "<amazon:effect name='whispered'><prosody rate='slow'>Daniel <emphasis level='strong'>REALLY</emphasis> does not like being called a butt.</prosody></amazon:effect>",
+        "Daniel is super good at programming, <amazon:effect name='whispered'> but bad at naming things</amazon:effect>",
+        "<amazon:effect name='whispered'>I sold Daniel's couch.</amazon:effect>"
+        ]
+
+    speech_output = responses[rand(0,len(responses)-1)]
+
+    should_end_session = False
+
+    # Setting reprompt_text to None signifies that we do not want to reprompt
+    # the user. If the user does not respond or says something that is not
+    # understood, the session will end.
+    return build_response(session_attributes, build_speechlet_response(
+        intent['name'], speech_output, reprompt_text, should_end_session))
+
+
 
 def on_intent(intent_request, session):
     """ Called when the user specifies an intent for this skill """
@@ -175,8 +197,8 @@ def on_intent(intent_request, session):
     # Dispatch to your skill's intent handlers
     if intent_name == "about_daniel":
         return talk_about_daniel(intent, session)
-    elif intent_name == "WhatsMyColorIntent":
-        return get_color_from_session(intent, session)
+    elif intent_name == "secret":
+        return secret_about_daniel(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
