@@ -188,11 +188,11 @@ def random_history(intent, session):
     reprompt_text = None
     card_title = "Random History"
 
-    speech_output = "The captain called a meeting in the saloon.  He told us that "+
-    "we were off Frenchman's Bay and that we would remain at anchor there until "+
-    "the next morning when he would try to enter Cockburn Town Harbor. He said "+
-    "this might be difficult, as there was a long reef about 1000 feet off the "+
-    "mouth of the harbor, running parallel with the shore.  Then he said, \"Tonight "+
+    speech_output = "The captain called a meeting in the saloon.  He told us that " + \
+    "we were off Frenchman's Bay and that we would remain at anchor there until " + \
+    "the next morning when he would try to enter Cockburn Town Harbor. He said " + \
+    "this might be difficult, as there was a long reef about 1000 feet off the " + \
+    "mouth of the harbor, running parallel with the shore.  Then he said, \"Tonight " + \
     "we will 'ave a masquerade, with prizes for the best costumes.\""
 
     should_end_session = False
