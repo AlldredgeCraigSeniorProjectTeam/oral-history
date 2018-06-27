@@ -52,7 +52,7 @@ def get_welcome_response():
 
     session_attributes = {}
     card_title = "Welcome"
-    speech_output = "Hello World! And Hello Jacob!"
+    speech_output = "Welcome to Family History! Try saying 'tell me a story'"
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
     reprompt_text = ""
@@ -64,7 +64,7 @@ def get_welcome_response():
 
 def handle_session_end_request():
     card_title = "Session Ended"
-    speech_output = 'Goodbye! And remember, Daniel is a <say-as interpret-as="expletive">butt</say-as>'
+    speech_output = 'Goodbye!'
     # Setting this to true ends the session and exits the skill.
     should_end_session = True
     return build_response({}, build_speechlet_response(
@@ -183,6 +183,25 @@ def secret_about_daniel(intent, session):
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
+def random_history(intent, session):
+    session_attributes = {}
+    reprompt_text = None
+    card_title = "Random History"
+
+    speech_output = "The captain called a meeting in the saloon.  He told us that "+
+    "we were off Frenchman's Bay and that we would remain at anchor there until "+
+    "the next morning when he would try to enter Cockburn Town Harbor. He said "+
+    "this might be difficult, as there was a long reef about 1000 feet off the "+
+    "mouth of the harbor, running parallel with the shore.  Then he said, \"Tonight "+
+    "we will 'ave a masquerade, with prizes for the best costumes.\""
+
+    should_end_session = False
+
+    # Setting reprompt_text to None signifies that we do not want to reprompt
+    # the user. If the user does not respond or says something that is not
+    # understood, the session will end.
+    return build_response(session_attributes, build_speechlet_response(
+        intent['name'], speech_output, reprompt_text, should_end_session))
 
 
 def on_intent(intent_request, session):
@@ -195,10 +214,12 @@ def on_intent(intent_request, session):
     intent_name = intent_request['intent']['name']
 
     # Dispatch to your skill's intent handlers
-    if intent_name == "about_daniel":
+    if intent_name == "record_history":
         return talk_about_daniel(intent, session)
-    elif intent_name == "secret":
-        return secret_about_daniel(intent, session)
+    elif intent_name == "read_history":
+        pass
+    elif intent_name == "random_history":
+        return random_history(intent,session)
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
