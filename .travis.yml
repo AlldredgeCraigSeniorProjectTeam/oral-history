@@ -1,6 +1,6 @@
 language: generic
 before_deploy:
-- zip -j zips/oral_history.zip src/oralHistory.py
+- zip -j oral_history.zip src/oralHistory.py
 deploy:
 - provider: s3
   access_key_id: $s3_access_key_id
@@ -15,7 +15,7 @@ deploy:
   access_key_id: $s3_access_key_id
   secret_access_key: $s3_secret_key
   function_name: "oralHistory"
-  zip: zips/oral_history.zip
+  zip: oral_history.zip
   region: "us-east-1"
   role: "arn:aws:iam::523059797638:role/service-role/oral_history"
   runtime: "python2.7"
