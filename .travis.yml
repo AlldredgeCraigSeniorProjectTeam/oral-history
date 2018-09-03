@@ -1,6 +1,9 @@
 language: generic
 before_deploy:
 - zip -j oral_history.zip src/oralHistory.py
+- zip -j read_story.zip src/readStoryFromFamilySearch.py
+- zip -j record_story.zip src/recordStoryAndPostToFamilySearch.py
+- zip -j authenticate.zip src/authenticateWithFamilySearch.py
 deploy:
 - provider: s3
   access_key_id: $s3_access_key_id
@@ -20,4 +23,34 @@ deploy:
   role: "arn:aws:iam::523059797638:role/service-role/oral_history"
   runtime: "python2.7"
   module_name: "oralHistory"
+  handler_name: "lambda_handler"
+- provider: lambda
+  access_key_id: $s3_access_key_id
+  secret_access_key: $s3_secret_key
+  function_name: "readStoryFromFamilySearch"
+  zip: read_story.zip
+  region: "us-east-1"
+  role: "arn:aws:iam::523059797638:role/service-role/read_story_from_familysearch"
+  runtime: "python2.7"
+  module_name: "readStoryFromFamilySearch"
+  handler_name: "lambda_handler"
+- provider: lambda
+  access_key_id: $s3_access_key_id
+  secret_access_key: $s3_secret_key
+  function_name: "recordStoryAndPostToFamilySearch"
+  zip: record_story.zip
+  region: "us-east-1"
+  role: "arn:aws:iam::523059797638:role/service-role/record_story_and_post_to_familysearch"
+  runtime: "python2.7"
+  module_name: "recordStoryAndPostToFamilySearch"
+  handler_name: "lambda_handler"
+- provider: lambda
+  access_key_id: $s3_access_key_id
+  secret_access_key: $s3_secret_key
+  function_name: "authenticateWithFamilySearch"
+  zip: authenticate.zip
+  region: "us-east-1"
+  role: "arn:aws:iam::523059797638:role/service-role/authenticate_with_familysearch"
+  runtime: "python2.7"
+  module_name: "authenticateWithFamilySearch"
   handler_name: "lambda_handler"
