@@ -183,6 +183,21 @@ def secret_about_daniel(intent, session):
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
+def read_history(intent, session):
+    session_attributes = {}
+    reprompt_text = None
+    card_title = "Read History"
+
+    speech_output = "Now attempting to connect to FamilySearch"
+
+    should_end_session = False
+
+    # Setting reprompt_text to None signifies that we do not want to reprompt
+    # the user. If the user does not respond or says something that is not
+    # understood, the session will end.
+    return build_response(session_attributes, build_speechlet_response(
+        intent['name'], speech_output, reprompt_text, should_end_session))
+
 def random_history(intent, session):
     session_attributes = {}
     reprompt_text = None
@@ -217,9 +232,9 @@ def on_intent(intent_request, session):
     if intent_name == "record_history":
         return talk_about_daniel(intent, session)
     elif intent_name == "read_history":
-        pass
+        return read_history(intent, session)
     elif intent_name == "random_history":
-        return random_history(intent,session)
+        return random_history(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
