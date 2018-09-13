@@ -1,6 +1,11 @@
 from __future__ import print_function
 from random import randint as rand
 
+from ask_sdk_core.dispatch_components import AbstractRequestHandler
+from ask_sdk_core.handler_input import HandlerInput
+from ask_sdk_core.utils import is_intent_name
+from ask_sdk_core.response_helper import get_plain_text_content
+
 # --------------- Helpers that build all of the responses ----------------------
 
 def build_speechlet_response(title, output, reprompt_text, should_end_session):
@@ -43,7 +48,10 @@ def build_response(session_attributes, speechlet_response):
         'response': speechlet_response
     }
 
-
+# --------------- Helper that handles logging ------------------
+def log(event):
+    print('Logged event: {}'.format(event))
+    
 # --------------- Functions that control the skill's behavior ------------------
 
 def get_welcome_response():
@@ -192,6 +200,8 @@ def read_history(intent, session):
     # If the user isn't yet authenticated, then return a LinkAccount card
 
     speech_output = "Now attempting to connect to FamilySearch"
+
+    log('Hello World')
 
     should_end_session = False
 
