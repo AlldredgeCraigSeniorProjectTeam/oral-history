@@ -24,6 +24,17 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session):
         'shouldEndSession': should_end_session
     }
 
+def build_link_account_response(title, output, reprompt_text, should_end_session):
+    return {
+        "outputSpeech": {
+          "type": "PlainText",
+        "text": " Please use the companion app to authenticate on Amazon to start using this skill"
+        },
+        "card": {
+        "type": "LinkAccount"
+        },
+        "shouldEndSession": false
+    }
 
 def build_response(session_attributes, speechlet_response):
     return {
