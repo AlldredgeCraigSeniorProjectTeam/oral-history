@@ -29,6 +29,14 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session):
         'shouldEndSession': should_end_session
     }
 
+def build_link_account_response(title, output, reprompt_text, should_end_session=False):
+    return {
+        "outputSpeech": {"type":"PlainText","text":"Please go to your Alexa app and link your account."},
+        "card": {
+            "type": "LinkAccount"
+        }
+    }
+
 def build_response(session_attributes, speechlet_response):
     return {
         'version': '1.0',
@@ -189,14 +197,12 @@ def read_history(intent, session):
 
     speech_output = "Now attempting to connect to FamilySearch"
 
-    log('Hello World')
-
     should_end_session = False
 
     # Setting reprompt_text to None signifies that we do not want to reprompt
     # the user. If the user does not respond or says something that is not
     # understood, the session will end.
-    return build_response(session_attributes, build_speechlet_response(
+    return build_response(session_attributes, build_link_account_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
 def random_history(intent, session):
