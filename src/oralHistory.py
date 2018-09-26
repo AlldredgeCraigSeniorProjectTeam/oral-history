@@ -47,7 +47,7 @@ def build_response(session_attributes, speechlet_response):
 # --------------- Helper that handles logging ------------------
 def log(event):
     print('Logged event: {}'.format(event))
-    
+
 # --------------- Functions that control the skill's behavior ------------------
 
 def get_welcome_response():
@@ -148,45 +148,78 @@ def on_launch(launch_request, session):
     # Dispatch to your skill's launch
     return get_welcome_response()
 
-def talk_about_daniel(intent, session):
+# def talk_about_daniel(intent, session):
+#     session_attributes = {}
+#     reprompt_text = None
+#     card_title = "daniel"
+#     responses = [
+#         "Daniel is a cool guy.",
+#         "Daniel is good at math.",
+#         "Jacob always forgets that Daniel is gluten intolerant."
+#         ]
+#
+#     speech_output = responses[rand(0,len(responses)-1)]
+#
+#     should_end_session = False
+#
+#     # Setting reprompt_text to None signifies that we do not want to reprompt
+#     # the user. If the user does not respond or says something that is not
+#     # understood, the session will end.
+#     return build_response(session_attributes, build_speechlet_response(
+#         intent['name'], speech_output, reprompt_text, should_end_session))
+
+# def secret_about_daniel(intent, session):
+#     session_attributes = {}
+#     reprompt_text = None
+#     card_title = "daniel"
+#     responses = [
+#         "<amazon:effect name='whispered'><prosody rate='slow'>Daniel <emphasis level='strong'>REALLY</emphasis> does not like being called a butt.</prosody></amazon:effect>",
+#         "Daniel is super good at programming, <amazon:effect name='whispered'> but bad at naming things</amazon:effect>",
+#         "<amazon:effect name='whispered'>I sold Daniel's couch.</amazon:effect>"
+#         ]
+#
+#     speech_output = responses[rand(0,len(responses)-1)]
+#
+#     should_end_session = False
+#
+#     # Setting reprompt_text to None signifies that we do not want to reprompt
+#     # the user. If the user does not respond or says something that is not
+#     # understood, the session will end.
+#     return build_response(session_attributes, build_speechlet_response(
+#         intent['name'], speech_output, reprompt_text, should_end_session))
+
+def gen_file_name():
+    '''Use to create unique entry?'''
+    return 'filename'
+
+def record_history(intent, session):
+    import boto3
+    from botocore.client import Config
+
+    ACCESS_KEY = ''
+    SECRET_ACCESS_KEY = ''
+    BUCKET_NAME = 'alldredgecraigseniorproject'
+
+    data = open('filename', 'rb')
+
+    s3 = boto3.resource(
+    's3',
+    aws_access_key_id=ACCESS_KEY,
+    aws_secret_access_key=SECRET_ACCESS_KEY,
+    config=Config(signature_version='s3v4')
+    )
+    s3.Bucket(BUCKET_NAME).put_object(Key='filename', Body=data)
+    print("Success")
+
     session_attributes = {}
     reprompt_text = None
-    card_title = "daniel"
-    responses = [
-        "Daniel is a cool guy.",
-        "Daniel is good at math.",
-        "Jacob always forgets that Daniel is gluten intolerant."
-        ]
-
-    speech_output = responses[rand(0,len(responses)-1)]
+    card_title = "Read History"
 
     should_end_session = False
 
-    # Setting reprompt_text to None signifies that we do not want to reprompt
-    # the user. If the user does not respond or says something that is not
-    # understood, the session will end.
-    return build_response(session_attributes, build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
 
-def secret_about_daniel(intent, session):
-    session_attributes = {}
-    reprompt_text = None
-    card_title = "daniel"
-    responses = [
-        "<amazon:effect name='whispered'><prosody rate='slow'>Daniel <emphasis level='strong'>REALLY</emphasis> does not like being called a butt.</prosody></amazon:effect>",
-        "Daniel is super good at programming, <amazon:effect name='whispered'> but bad at naming things</amazon:effect>",
-        "<amazon:effect name='whispered'>I sold Daniel's couch.</amazon:effect>"
-        ]
 
-    speech_output = responses[rand(0,len(responses)-1)]
-
-    should_end_session = False
-
-    # Setting reprompt_text to None signifies that we do not want to reprompt
-    # the user. If the user does not respond or says something that is not
-    # understood, the session will end.
-    return build_response(session_attributes, build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
+    return build_response(session_attributes, build_link_account_response())
 
 def read_history(intent, session):
     session_attributes = {}
@@ -229,7 +262,7 @@ def on_intent(intent_request, session):
 
     # Dispatch to your skill's intent handlers
     if intent_name == "record_history":
-        return talk_about_daniel(intent, session)
+        return record_history(intent, session)
     elif intent_name == "read_history":
         return read_history(intent, session)
     elif intent_name == "random_history":
