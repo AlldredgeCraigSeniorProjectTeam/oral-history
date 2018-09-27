@@ -6,6 +6,9 @@ from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.utils import is_intent_name
 from ask_sdk_core.response_helper import get_plain_text_content
 
+import boto3
+from botocore.client import Config
+
 # --------------- Helpers that build all of the responses ----------------------
 
 def build_speechlet_response(title, output, reprompt_text, should_end_session):
@@ -193,9 +196,6 @@ def gen_file_name():
     return 'filename'
 
 def record_history(intent, session):
-    import boto3
-    from botocore.client import Config
-
     ACCESS_KEY = ''
     SECRET_ACCESS_KEY = ''
     BUCKET_NAME = 'alldredgecraigseniorproject'
