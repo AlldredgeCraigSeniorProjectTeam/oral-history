@@ -34,7 +34,7 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session):
 
 def build_link_account_response():
     return {
-        "outputSpeech": {"type":"PlainText","text":"To get the most out of this Skill, please link your account."},
+        "outputSpeech": {"type":"PlainText","text":"Welcome to Family History! To get the most out of this Skill, please link your account."},
         "card": {
             "type": "LinkAccount"
         }
@@ -66,8 +66,7 @@ def get_welcome_response():
     reprompt_text = ""
 
     should_end_session = False
-    return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
+    return build_response(session_attributes, build_link_account_response())
 
 
 def handle_session_end_request():
