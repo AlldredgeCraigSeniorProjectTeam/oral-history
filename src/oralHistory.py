@@ -212,22 +212,24 @@ def record_history(intent, session):
 
     session_attributes = {}
     reprompt_text = None
-    card_title = "Read History"
+    card_title = "Record History"
 
+    speech_output = "Thanks for invoking Record History"
     should_end_session = False
 
+    return build_response(session_attributes, build_speechlet_response(
+        intent['name'], speech_output, reprompt_text, should_end_session))
 
-
-    return build_response(session_attributes, build_link_account_response())
 
 def read_history(intent, session):
     session_attributes = {}
     reprompt_text = None
     card_title = "Read History"
-
+    speech_output = "Thanks for invoking Read History"
     should_end_session = False
 
-    return build_response(session_attributes, build_link_account_response())
+    return build_response(session_attributes, build_speechlet_response(
+        intent['name'], speech_output, reprompt_text, should_end_session))
 
 def random_history(intent, session):
     session_attributes = {}
