@@ -21,7 +21,7 @@ will then record and upload to FamilySearch.
 
 # Our Alexa skill's requirements
  - Be able to preserve dictated family stories
- - Be able to store preserved family stories on FamilySearch 
+ - Be able to store preserved family stories on FamilySearch
 
 # Our workflow
  - Contact Alexa
@@ -44,10 +44,12 @@ will then record and upload to FamilySearch.
 # Our team's definitions
 | Term       | Definition |
 |------------|------------|
+| AWS   | Amazon Web Services  |
 | IAM        | Identity and access management.  Where AWS permissions are managed.  |
 | Intent     |            |
 | Invoke     | The canonical term for starting the exection of a Lambda function    |
 | Lambda     | A function that runs on AWS Lambda; no need for server config, etc.  |
+| KMS   | Key Management Service  |
 | Sample     |            |
 | Slot       |            |
 | SSML       |            |
