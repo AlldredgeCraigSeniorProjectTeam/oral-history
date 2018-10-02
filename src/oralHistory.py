@@ -195,8 +195,8 @@ def gen_file_name():
     return 'filename'
 
 def record_history(intent, session):
-    ACCESS_KEY = ''
-    SECRET_ACCESS_KEY = ''
+    # ACCESS_KEY = ''
+    # SECRET_ACCESS_KEY = ''
     BUCKET_NAME = 'alldredgecraigseniorproject'
 
     data = open('filename', 'rb')
