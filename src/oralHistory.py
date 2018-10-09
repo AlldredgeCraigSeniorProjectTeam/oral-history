@@ -139,7 +139,6 @@ def on_session_started(session_started_request, session):
     print("on_session_started requestId=" + session_started_request['requestId']
           + ", sessionId=" + session['sessionId'])
 
-
 def on_launch(launch_request, session):
     """ Called when the user launches the skill without specifying what they
     want
@@ -149,46 +148,6 @@ def on_launch(launch_request, session):
           ", sessionId=" + session['sessionId'])
     # Dispatch to your skill's launch
     return get_welcome_response()
-
-# def talk_about_daniel(intent, session):
-#     session_attributes = {}
-#     reprompt_text = None
-#     card_title = "daniel"
-#     responses = [
-#         "Daniel is a cool guy.",
-#         "Daniel is good at math.",
-#         "Jacob always forgets that Daniel is gluten intolerant."
-#         ]
-#
-#     speech_output = responses[rand(0,len(responses)-1)]
-#
-#     should_end_session = False
-#
-#     # Setting reprompt_text to None signifies that we do not want to reprompt
-#     # the user. If the user does not respond or says something that is not
-#     # understood, the session will end.
-#     return build_response(session_attributes, build_speechlet_response(
-#         intent['name'], speech_output, reprompt_text, should_end_session))
-
-# def secret_about_daniel(intent, session):
-#     session_attributes = {}
-#     reprompt_text = None
-#     card_title = "daniel"
-#     responses = [
-#         "<amazon:effect name='whispered'><prosody rate='slow'>Daniel <emphasis level='strong'>REALLY</emphasis> does not like being called a butt.</prosody></amazon:effect>",
-#         "Daniel is super good at programming, <amazon:effect name='whispered'> but bad at naming things</amazon:effect>",
-#         "<amazon:effect name='whispered'>I sold Daniel's couch.</amazon:effect>"
-#         ]
-#
-#     speech_output = responses[rand(0,len(responses)-1)]
-#
-#     should_end_session = False
-#
-#     # Setting reprompt_text to None signifies that we do not want to reprompt
-#     # the user. If the user does not respond or says something that is not
-#     # understood, the session will end.
-#     return build_response(session_attributes, build_speechlet_response(
-#         intent['name'], speech_output, reprompt_text, should_end_session))
 
 def gen_file_name():
     '''Use to create unique entry?'''
