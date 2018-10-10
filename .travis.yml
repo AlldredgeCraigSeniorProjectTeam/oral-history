@@ -1,12 +1,9 @@
 language: generic
 before_deploy:
-- zip -j oral_history.zip src/oralHistory.py
+- zip -j oral_history.zip src/oralHistory.py src/familySearchAPIDecorator.py
 - cd ask-sdk
 - zip -r ../oral_history.zip ask_sdk ask_sdk_model-0.3.0.dist-info chardet enum34-1.1.6.dist-info requests typing-3.6.6.dist-info ask_sdk-0.1.3.dist-info boto3 chardet-3.0.4.dist-info futures-3.2.0.dist-info requests-2.19.1.dist-info typing.py ask_sdk_core boto3-1.9.4.dist-info concurrent idna s3transfer typing.pyc ask_sdk_core-0.1.3.dist-info botocore dateutil idna-2.7.dist-info s3transfer-0.1.13.dist-info urllib3 ask_sdk_dynamodb botocore-1.12.4.dist-info docutils jmespath six-1.11.0.dist-info urllib3-1.23.dist-info ask_sdk_dynamodb_persistence_adapter-0.1.3.dist-info certifi docutils-0.14.dist-info jmespath-0.9.3.dist-info six.py ask_sdk_model certifi-2018.8.24.dist-info enum python_dateutil-2.7.3.dist-info six.pyc
 - cd ..
-- zip -j read_story.zip src/readStoryFromFamilySearch.py
-- zip -j record_story.zip src/recordStoryAndPostToFamilySearch.py
-- zip -j authenticate.zip src/authenticateWithFamilySearch.py
 deploy:
 - provider: s3
   access_key_id: $s3_access_key_id
@@ -26,34 +23,4 @@ deploy:
   role: "arn:aws:iam::523059797638:role/service-role/oral_history"
   runtime: "python2.7"
   module_name: "oralHistory"
-  handler_name: "lambda_handler"
-- provider: lambda
-  access_key_id: $s3_access_key_id
-  secret_access_key: $s3_secret_key
-  function_name: "readStoryFromFamilySearch"
-  zip: read_story.zip
-  region: "us-east-1"
-  role: "arn:aws:iam::523059797638:role/service-role/read_story_from_familysearch"
-  runtime: "python2.7"
-  module_name: "readStoryFromFamilySearch"
-  handler_name: "lambda_handler"
-- provider: lambda
-  access_key_id: $s3_access_key_id
-  secret_access_key: $s3_secret_key
-  function_name: "recordStoryAndPostToFamilySearch"
-  zip: record_story.zip
-  region: "us-east-1"
-  role: "arn:aws:iam::523059797638:role/service-role/record_story_and_post_to_familysearch"
-  runtime: "python2.7"
-  module_name: "recordStoryAndPostToFamilySearch"
-  handler_name: "lambda_handler"
-- provider: lambda
-  access_key_id: $s3_access_key_id
-  secret_access_key: $s3_secret_key
-  function_name: "authenticateWithFamilySearch"
-  zip: authenticate.zip
-  region: "us-east-1"
-  role: "arn:aws:iam::523059797638:role/service-role/authenticate_with_familysearch"
-  runtime: "python2.7"
-  module_name: "authenticateWithFamilySearch"
   handler_name: "lambda_handler"

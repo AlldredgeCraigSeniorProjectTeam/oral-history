@@ -6,6 +6,8 @@ from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.utils import is_intent_name
 from ask_sdk_core.response_helper import get_plain_text_content
 
+from familySearchAPIDecorator import FamilySearchDecorator
+
 import boto3
 from botocore.client import Config
 
