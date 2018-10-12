@@ -157,14 +157,16 @@ def gen_file_name():
 
 def record_history(intent, session):
 
-    data = open('filename.txt', 'rb').close()
+    file = open('filename.txt', 'rb')
+    file.write("Hello, World! You have uploaded to s3!")
+    file.close()
 
     s3 = boto3.resource(
     's3'
     , aws_access_key_id=ACCESS_KEY
     , aws_secret_access_key=SECRET_ACCESS_KEY
     , config=Config(signature_version='s3v4'))
-    s3.Bucket(BUCKET_NAME).put_object(Key=data, Body=data)
+    s3.Bucket(BUCKET_NAME).put_object(Key='filename.txt', Body=file)
     print("Success")
 
     session_attributes = {}
