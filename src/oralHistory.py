@@ -1,6 +1,8 @@
 from __future__ import print_function
 from random import randint as rand
 
+import os
+
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.utils import is_intent_name
@@ -169,13 +171,14 @@ def record_history(intent, session):
     file.write("Hello, World! You have uploaded to s3!")
     file.close()
 
+    file = open('/tmp/filename.txt', 'r')
     s3 = boto3.resource(
     's3'
-    , aws_access_key_id=ACCESS_KEY
-    , aws_secret_access_key=SECRET_ACCESS_KEY
+    , aws_access_key_id=os.environ['ACCESS_KEY']
+    , aws_secret_access_key=os.environ['SECRET_ACCESS_KEY']
     , config=Config(signature_version='s3v4'))
-    s3.Bucket(BUCKET_NAME).put_object(Key='/tmp/filename.txt', Body=file)
-    print("Success")
+    s3.Bucket(os.environ['BUCKET_NAME']).put_object(Key='speechTest/testfile.txt', Body=file)
+    file.close()
 
     session_attributes = {}
     reprompt_text = None
