@@ -2,13 +2,14 @@ from __future__ import print_function
 from random import randint as rand
 
 import os
+import requests
 
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.utils import is_intent_name
 from ask_sdk_core.response_helper import get_plain_text_content
 
-from familySearchAPIDecorator import FamilySearchDecorator
+from familySearchAPIDecorator import FSDecorator
 
 import boto3
 from botocore.client import Config
@@ -197,6 +198,11 @@ def read_history(intent, session):
     card_title = "Read History"
     speech_output = "Thanks for invoking Read History"
     should_end_session = False
+
+    id = "751321"
+    x = FSDecorator(session).getInstance()
+    response = x.getMemory(id)
+    speech_output = response.text
 
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
