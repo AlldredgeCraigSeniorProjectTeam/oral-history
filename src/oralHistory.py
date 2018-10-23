@@ -68,8 +68,11 @@ def get_welcome_response():
     reprompt_text = ""
 
     should_end_session = False
-    return build_response(session_attributes, build_link_account_response())
+    return build_response(session_attributes, build_speechlet_response(card_title, speech_output, reprompt_text, should_end_session))
 
+def get_link_account_response():
+    session_attributes = {}
+    return build_response(session_attributes, build_link_account_response())
 
 def handle_session_end_request():
     card_title = "Session Ended"
@@ -146,10 +149,15 @@ def on_launch(launch_request, session):
     want
     """
 
+    access_token = session['user']['accessToken']
+    
     print("on_launch requestId=" + launch_request['requestId'] +
           ", sessionId=" + session['sessionId'])
-    # Dispatch to your skill's launch
-    return get_welcome_response()
+
+    if access_token == "":
+        return get_link_account_response()
+    else:
+        return get_welcome_response()
 
 def gen_file_name():
     '''Use to create unique entry?'''
@@ -254,21 +262,9 @@ def lambda_handler(event, context):
     print("event.session.application.applicationId=" +
           event['session']['application']['applicationId'])
 
-    print(event)
-    access_token = ""
     access_token = event['session']['user']['accessToken']
-    if not access_token == "":
-        print("access_token is not empty")
 
-    """
-    Uncomment this if statement and populate with your skill's application ID to
-    prevent someone else from configuring a skill that sends requests to this
-    function.
-    """
-    # if (event['session']['application']['applicationId'] !=
-    #         "amzn1.echo-sdk-ams.app.[unique-value-here]"):
-    #     raise ValueError("Invalid Application ID")
-
+    # This call is strictly for logging purposes
     if event['session']['new']:
         on_session_started({'requestId': event['request']['requestId']},
                            event['session'])
