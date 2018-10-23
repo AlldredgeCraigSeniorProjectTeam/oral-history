@@ -165,7 +165,7 @@ def gen_file_name():
 
 def record_history(intent, session):
 
-    file = open('filename.txt', 'a')
+    file = open('filename.txt', 'w')
     file.write("Hello, World! You have uploaded to s3!")
     file.close()
 
