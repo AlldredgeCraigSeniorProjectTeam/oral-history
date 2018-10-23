@@ -254,6 +254,12 @@ def lambda_handler(event, context):
     print("event.session.application.applicationId=" +
           event['session']['application']['applicationId'])
 
+    print(event)
+    access_token = ""
+    access_token = event['session']['user']['accessToken']
+    if not access_token == "":
+        print("access_token is not empty")
+
     """
     Uncomment this if statement and populate with your skill's application ID to
     prevent someone else from configuring a skill that sends requests to this
