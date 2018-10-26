@@ -23,6 +23,13 @@ class FSDecorator:
 
             response = requests.request("GET", url+id, headers=headers)
 
+            response_status_code = response.status_code
+
+            print("The request returned a status code of " + str(response_status_code))
+
+            if str(response_status_code)[0] == 4:
+                print("The attempt to get a story resulted in a 4** error.  You need to reauthenticate")
+
             return response
 
     instance = None
