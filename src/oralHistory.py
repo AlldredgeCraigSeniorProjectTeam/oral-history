@@ -202,7 +202,14 @@ def read_history(intent, session):
     id = "751321"
     x = FSDecorator(session).getInstance()
     response = x.getMemory(id)
-    speech_output = response.text
+    if response.status_code == 401:
+        # You need to reauthenticate
+        speech_output = "The session has expired.  Please reauthenticate."
+    if response.status_code == 200:
+        speech_output = response.text
+    else:
+        # Unhandled status code
+        speech_output = "There was an error"
 
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
