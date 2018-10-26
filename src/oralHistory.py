@@ -209,7 +209,7 @@ def read_history(intent, session):
         speech_output = response.text
     else:
         # Unhandled status code
-        speech_output = "There was an error"
+        speech_output = "Your request to FamilySearch returned with an error code of" + str(response.status_code)
 
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
