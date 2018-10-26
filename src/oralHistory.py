@@ -151,7 +151,7 @@ def on_launch(launch_request, session):
     """ Called when the user launches the skill without specifying what they
     want
     """
-    
+
     print("on_launch requestId=" + launch_request['requestId'] + ", sessionId=" + session['sessionId'])    
     
     try:
@@ -275,8 +275,6 @@ def lambda_handler(event, context):
     """
     print("event.session.application.applicationId=" +
           event['session']['application']['applicationId'])
-
-    access_token = event['session']['user']['accessToken']
 
     # This call is strictly for logging purposes
     if event['session']['new']:
