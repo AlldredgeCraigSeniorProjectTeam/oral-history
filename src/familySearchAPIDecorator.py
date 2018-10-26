@@ -1,4 +1,5 @@
 import requests
+from xml.etree import ElementTree
 
 class FSDecorator:
     """ A singleton decorator for the FamilySearch API"""
@@ -24,13 +25,21 @@ class FSDecorator:
             response = requests.request("GET", url+id, headers=headers)
 
             response_status_code = response.status_code
-
             print("The request returned a status code of " + str(response_status_code))
 
-            if str(response_status_code)[0] == '4':
-                print("The attempt to get a story resulted in a 4** error.  You need to reauthenticate")
+            if response.status_code == 401:
+                # You need to reauthenticate
+                speech_output = "The session has expired.  Please reauthenticate."
+            if response.status_code == 200:
+                root = ElementTree.fromstring(response.text)
+                stories = root.findall(".//{http://gedcomx.org/v1/}description")
 
-            return response
+                speech_output = stories[0].text
+            else:
+                # Unhandled status code
+                speech_output = "Your request to FamilySearch returned with an error code of" + str(response.status_code)
+
+            return speech_output
 
     instance = None
     def __init__(self, session):
