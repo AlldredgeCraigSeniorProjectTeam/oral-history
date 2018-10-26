@@ -151,16 +151,14 @@ def on_launch(launch_request, session):
     """ Called when the user launches the skill without specifying what they
     want
     """
-
-    access_token = session['user']['accessToken']
     
-    print("on_launch requestId=" + launch_request['requestId'] +
-          ", sessionId=" + session['sessionId'])
-
-    if access_token == "":
-        return get_link_account_response()
-    else:
+    print("on_launch requestId=" + launch_request['requestId'] + ", sessionId=" + session['sessionId'])    
+    
+    try:
+        access_token = session['user']['accessToken']
         return get_welcome_response()
+    except KeyError, e:
+        return get_link_account_response()
 
 def gen_file_name():
     '''Use to create unique entry?'''
