@@ -167,8 +167,8 @@ def gen_file_name():
 def record_history(intent, session):
 
     # grab the slots
-    slots = event['request']['intent']['slots']
-    story = slots['story']['value']
+    # slots = event['request']['intent']['slots']
+    story = intent['slots']['story']['value']
 
     file = open('/tmp/filename.txt', 'w')
     # file.write("Hello, World! You have uploaded to s3!")
