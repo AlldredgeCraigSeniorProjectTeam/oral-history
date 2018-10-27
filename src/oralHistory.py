@@ -152,15 +152,13 @@ def on_launch(launch_request, session):
     want
     """
 
-    access_token = session['user']['accessToken']
+    print("on_launch requestId=" + launch_request['requestId'] + ", sessionId=" + session['sessionId'])
 
-    print("on_launch requestId=" + launch_request['requestId'] +
-          ", sessionId=" + session['sessionId'])
-
-    if access_token == "":
-        return get_link_account_response()
-    else:
+    try:
+        access_token = session['user']['accessToken']
         return get_welcome_response()
+    except KeyError, e:
+        return get_link_account_response()
 
 def gen_file_name():
     '''Use to create unique entry?'''
@@ -201,13 +199,11 @@ def read_history(intent, session):
     session_attributes = {}
     reprompt_text = None
     card_title = "Read History"
-    speech_output = "Thanks for invoking Read History"
     should_end_session = False
 
     id = "751321"
-    x = FSDecorator(session).getInstance()
-    response = x.getMemory(id)
-    speech_output = response.text
+    FS = FSDecorator(session).getInstance()
+    speech_output = FS.getMemory(id)
 
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
@@ -275,8 +271,6 @@ def lambda_handler(event, context):
     """
     print("event.session.application.applicationId=" +
           event['session']['application']['applicationId'])
-
-    access_token = event['session']['user']['accessToken']
 
     # This call is strictly for logging purposes
     if event['session']['new']:
