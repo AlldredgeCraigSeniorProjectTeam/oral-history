@@ -1,12 +1,15 @@
 from __future__ import print_function
 from random import randint as rand
 
+import os
+import requests
+
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.utils import is_intent_name
 from ask_sdk_core.response_helper import get_plain_text_content
 
-from familySearchAPIDecorator import FamilySearchDecorator
+from familySearchAPIDecorator import FSDecorator
 
 import boto3
 from botocore.client import Config
@@ -68,8 +71,11 @@ def get_welcome_response():
     reprompt_text = ""
 
     should_end_session = False
-    return build_response(session_attributes, build_link_account_response())
+    return build_response(session_attributes, build_speechlet_response(card_title, speech_output, reprompt_text, should_end_session))
 
+def get_link_account_response():
+    session_attributes = {}
+    return build_response(session_attributes, build_link_account_response())
 
 def handle_session_end_request():
     card_title = "Session Ended"
@@ -146,10 +152,15 @@ def on_launch(launch_request, session):
     want
     """
 
+    access_token = session['user']['accessToken']
+
     print("on_launch requestId=" + launch_request['requestId'] +
           ", sessionId=" + session['sessionId'])
-    # Dispatch to your skill's launch
-    return get_welcome_response()
+
+    if access_token == "":
+        return get_link_account_response()
+    else:
+        return get_welcome_response()
 
 def gen_file_name():
     '''Use to create unique entry?'''
@@ -157,17 +168,23 @@ def gen_file_name():
 
 def record_history(intent, session):
 
-    file = open('filename.txt', 'a')
-    file.write("Hello, World! You have uploaded to s3!")
+    # grab the slots
+    slots = event['request']['intent']['slots']
+    story = slots['story']['value']
+
+    file = open('/tmp/filename.txt', 'w')
+    # file.write("Hello, World! You have uploaded to s3!")
+    file.write(story)
     file.close()
 
+    file = open('/tmp/filename.txt', 'r')
     s3 = boto3.resource(
     's3'
-    , aws_access_key_id=ACCESS_KEY
-    , aws_secret_access_key=SECRET_ACCESS_KEY
+    , aws_access_key_id=os.environ['ACCESS_KEY']
+    , aws_secret_access_key=os.environ['SECRET_ACCESS_KEY']
     , config=Config(signature_version='s3v4'))
-    s3.Bucket(BUCKET_NAME).put_object(Key='filename.txt', Body=file)
-    print("Success")
+    s3.Bucket(os.environ['BUCKET_NAME']).put_object(Key='speechTest/testfile.txt', Body=file)
+    file.close()
 
     session_attributes = {}
     reprompt_text = None
@@ -186,6 +203,11 @@ def read_history(intent, session):
     card_title = "Read History"
     speech_output = "Thanks for invoking Read History"
     should_end_session = False
+
+    id = "751321"
+    x = FSDecorator(session).getInstance()
+    response = x.getMemory(id)
+    speech_output = response.text
 
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
@@ -254,15 +276,9 @@ def lambda_handler(event, context):
     print("event.session.application.applicationId=" +
           event['session']['application']['applicationId'])
 
-    """
-    Uncomment this if statement and populate with your skill's application ID to
-    prevent someone else from configuring a skill that sends requests to this
-    function.
-    """
-    # if (event['session']['application']['applicationId'] !=
-    #         "amzn1.echo-sdk-ams.app.[unique-value-here]"):
-    #     raise ValueError("Invalid Application ID")
+    access_token = event['session']['user']['accessToken']
 
+    # This call is strictly for logging purposes
     if event['session']['new']:
         on_session_started({'requestId': event['request']['requestId']},
                            event['session'])
