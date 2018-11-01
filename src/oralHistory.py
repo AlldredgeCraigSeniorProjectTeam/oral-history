@@ -162,11 +162,10 @@ def read_history(intent, session):
     card_title = "Read History"
     should_end_session = False
 
-    id = "751321"
     FS = FSDecorator(session).getInstance()
 
     try:
-        speech_output = FS.getMemory(id)
+        speech_output = FS.getMemory()
     except httpError401Exception, e:
         # This is where you reauthenticate.
         return get_reauthenticate_response()

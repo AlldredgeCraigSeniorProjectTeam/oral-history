@@ -14,7 +14,7 @@ class FSDecorator:
         def postMemory(self, title, story_text, code_grant):
             pass
         
-        def getMemory(self, id):
+        def getMemory(self):
             url = "https://api-integ.familysearch.org/platform/memories/memories/"
             access_token = self.session['user']['accessToken']
 
@@ -23,6 +23,7 @@ class FSDecorator:
                 'Authorization': "Bearer " + access_token,
                 }
 
+            id = "751321"
             response = requests.request("GET", url+id, headers=headers)
 
             response_status_code = response.status_code
