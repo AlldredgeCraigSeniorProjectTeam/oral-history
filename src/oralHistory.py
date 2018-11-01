@@ -51,7 +51,8 @@ def build_reauthenticate_response():
         "outputSpeech": {"type":"PlainText","text":"Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."},
         "card": {
             "type": "LinkAccount"
-        }
+        },
+        'shouldEndSession' : True
     }
 
 def build_response(session_attributes, speechlet_response):
