@@ -30,14 +30,14 @@ class FSDecorator:
             if response.status_code == 401:
                 # You need to reauthenticate
                 speech_output = "The session has expired.  Please reauthenticate."
-            if response.status_code == 200:
+            elif response.status_code == 200:
                 root = ElementTree.fromstring(response.text)
                 stories = root.findall(".//{http://gedcomx.org/v1/}description")
 
                 speech_output = stories[0].text
             else:
                 # Unhandled status code
-                speech_output = "Your request to FamilySearch returned with an error code of" + str(response.status_code)
+                speech_output = "Your request to FamilySearch returned with an error code of " + str(response.status_code)
 
             return speech_output
 
