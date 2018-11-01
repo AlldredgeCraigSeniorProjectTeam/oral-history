@@ -10,6 +10,7 @@ from ask_sdk_core.utils import is_intent_name
 from ask_sdk_core.response_helper import get_plain_text_content
 
 from familySearchAPIDecorator import FSDecorator
+from customExceptions import httpError401Exception, httpErrorUnhandledException
 
 import boto3
 from botocore.client import Config
@@ -40,6 +41,14 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session):
 def build_link_account_response():
     return {
         "outputSpeech": {"type":"PlainText","text":"Welcome to Family History! To get the most out of this Skill, please link your account."},
+        "card": {
+            "type": "LinkAccount"
+        }
+    }
+
+def build_reauthenticate_response():
+    return {
+        "outputSpeech": {"type":"PlainText","text":"Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."},
         "card": {
             "type": "LinkAccount"
         }
@@ -76,6 +85,10 @@ def get_welcome_response():
 def get_link_account_response():
     session_attributes = {}
     return build_response(session_attributes, build_link_account_response())
+
+def get_reauthenticate_response():
+    session_attributes = {}
+    return build_response(session_attributes, build_reauthenticate_response())
 
 def handle_session_end_request():
     card_title = "Session Ended"
@@ -150,7 +163,12 @@ def read_history(intent, session):
 
     id = "751321"
     FS = FSDecorator(session).getInstance()
-    speech_output = FS.getMemory(id)
+
+    try:
+        speech_output = FS.getMemory(id)
+    except httpError401Exception, e:
+        # This is where you reauthenticate.
+        return get_reauthenticate_response()
 
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))

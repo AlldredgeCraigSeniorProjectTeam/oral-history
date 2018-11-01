@@ -1,5 +1,6 @@
 import requests
 from xml.etree import ElementTree
+from customExceptions import httpError401Exception, httpErrorUnhandledException
 
 class FSDecorator:
     """ A singleton decorator for the FamilySearch API"""
@@ -27,19 +28,19 @@ class FSDecorator:
             response_status_code = response.status_code
             print("The request returned a status code of " + str(response_status_code))
 
-            if response.status_code == 401:
-                # You need to reauthenticate
-                speech_output = "The session has expired.  Please reauthenticate."
-            elif response.status_code == 200:
+
+            if response.status_code == 200:
                 root = ElementTree.fromstring(response.text)
                 stories = root.findall(".//{http://gedcomx.org/v1/}description")
 
                 speech_output = stories[0].text
+                return speech_output
+            elif response.status_code == 401:
+                # You need to reauthenticate
+                raise httpError401Exception()
             else:
                 # Unhandled status code
-                speech_output = "Your request to FamilySearch returned with an error code of " + str(response.status_code)
-
-            return speech_output
+                raise httpErrorUnhandledException(response_status_code)
 
     instance = None
     def __init__(self, session):
