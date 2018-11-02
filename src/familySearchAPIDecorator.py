@@ -1,7 +1,7 @@
 import requests
 import random
 import json
-from customExceptions import httpError401Exception, httpErrorUnhandledException
+from customExceptions import httpError401Exception, httpError403Exception, httpErrorUnhandledException
 
 
 class FSDecorator:
@@ -19,7 +19,7 @@ class FSDecorator:
             pass
         
         def getRandomMemoryID(self):
-            """ This method random chooses the ID of one of the memories available on FamilySearch """
+            """ This method randomly chooses the ID of one of the memories available on FamilySearch """
             url = "https://api-integ.familysearch.org/platform/memories/memories/"
             access_token = self.session['user']['accessToken']           
 
@@ -46,6 +46,8 @@ class FSDecorator:
             elif response.status_code == 401:
                 # You need to reauthenticate
                 raise httpError401Exception()
+            elif response.status_code == 403:
+                raise httpError403Exception()
             else:
                 # Unhandled status code
                 raise httpErrorUnhandledException(response.status_code)
@@ -81,6 +83,8 @@ class FSDecorator:
             elif response.status_code == 401:
                 # You need to reauthenticate
                 raise httpError401Exception()
+            elif response.status_code == 403:
+                raise httpError403Exception()
             else:
                 # Unhandled status code
                 raise httpErrorUnhandledException(response_status_code)

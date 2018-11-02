@@ -10,7 +10,7 @@ from ask_sdk_core.utils import is_intent_name
 from ask_sdk_core.response_helper import get_plain_text_content
 
 from familySearchAPIDecorator import FSDecorator
-from customExceptions import httpError401Exception, httpErrorUnhandledException
+from customExceptions import httpError401Exception, httpError403Exception, httpErrorUnhandledException
 
 import boto3
 from botocore.client import Config
@@ -169,7 +169,8 @@ def read_history(intent, session):
     except httpError401Exception, e:
         # This is where you reauthenticate.
         return get_reauthenticate_response()
-
+    except httpError403Exception, e:
+        return get_reauthenticate_response()
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
