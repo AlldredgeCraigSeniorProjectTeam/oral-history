@@ -29,6 +29,7 @@ class FSDecorator:
                 }
 
             response = requests.request("GET", url, headers=headers)
+            print("The request returned a status code of " + str(response.status_code))
 
             if response.status_code == 200:
                 responseData = json.loads(response.text)
