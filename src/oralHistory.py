@@ -166,7 +166,7 @@ def record_history(intent, session):
         return get_reauthenticate_response()
 
     return build_response(session_attributes, build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 ##############################################
 
 def read_history(intent, session):
@@ -185,7 +185,7 @@ def read_history(intent, session):
     except httpError403Exception, e:
         return get_reauthenticate_response()
     return build_response(session_attributes, build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def on_intent(intent_request, session):
     """ Called when the user specifies an intent for this skill """
