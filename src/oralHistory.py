@@ -153,9 +153,21 @@ def record_history(intent, session):
     speech_output = "Thanks for invoking Record History"
     should_end_session = False
 
+##############################################
+# This is what it will look like to use the FSDecorator.
+    FS = FSDecorator(session).getInstance()
+    
+    try:
+        FS.postMemory()
+    except httpError401Exception, e:
+        # This is where you reauthenticate.
+        return get_reauthenticate_response()
+    except httpError403Exception, e:
+        return get_reauthenticate_response()
+
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
-
+##############################################
 
 def read_history(intent, session):
     session_attributes = {}

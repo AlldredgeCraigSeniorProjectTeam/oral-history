@@ -16,8 +16,30 @@ class FSDecorator:
         
         def postMemory(self):
             """ This method posts a memory to FamilySearch"""
-            pass
-        
+            url = "https://api-integ.familysearch.org/platform/memories/memories"
+            access_token = self.session['user']['accessToken']
+
+            payload = "This is a brand new memory"
+            headers = {
+                'Content-Disposition': "attachment; filename='a_super_memory.txt'",
+                'Content-Type': "text/plain",
+                'Authorization': "Bearer " + access_token
+                }
+
+            response = requests.request("POST", url, data=payload, headers=headers)
+
+            if response.status_code == 201:
+                print "The memory was POSTed successfull, response code (201 created)"
+            elif response.status_code == 401:
+                # 401 error, reauthenticate
+                raise httpError401Exception()
+            elif response.status_code == 403:
+                # 403 error, reauthenticate
+                raise httpError403Exception()
+            else:
+                # Unhandled status code
+                raise httpErrorUnhandledException(response.status_code)
+
         def getRandomMemoryID(self):
             """ This method randomly chooses the ID of one of the memories available on FamilySearch """
             url = "https://api-integ.familysearch.org/platform/memories/memories/"
@@ -25,7 +47,7 @@ class FSDecorator:
 
             headers = {
                 'Accept': "application/json",
-                'Authorization': "Bearer " + access_token,
+                'Authorization': "Bearer " + access_token
                 }
 
             response = requests.request("GET", url, headers=headers)
