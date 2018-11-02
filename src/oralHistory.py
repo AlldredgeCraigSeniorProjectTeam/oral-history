@@ -116,6 +116,7 @@ def on_launch(launch_request, session):
     print("on_launch requestId=" + launch_request['requestId'] + ", sessionId=" + session['sessionId'])
 
     try:
+        # Try getting the access token, as a test of whether the user has linked the account
         access_token = session['user']['accessToken']
         return get_welcome_response()
     except KeyError, e:
