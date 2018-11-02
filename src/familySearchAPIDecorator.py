@@ -3,19 +3,23 @@ import random
 from xml.etree import ElementTree
 from customExceptions import httpError401Exception, httpErrorUnhandledException
 
+
 class FSDecorator:
     """ A singleton decorator for the FamilySearch API"""
-    # This code adapted from https://python-3-patterns-idioms-test.readthedocs.io/en/latest/Singleton.html
-
+    # Adapted from https://python-3-patterns-idioms-test.readthedocs.io/en/latest/Singleton.html
 
     class __FSDecorator:
         def __init__(self, session):
+            """ The constructor for the FSDecorator class takes one parameter, the session, which 
+            it stores in its attributes """
             self.session = session
         
-        def postMemory(self, title, story_text, code_grant):
+        def postMemory(self):
+            """ This method posts a memory to FamilySearch"""
             pass
         
         def getRandomMemoryID(self):
+            """ This method random chooses the ID of one of the memories available on FamilySearch """
             url = "https://api-integ.familysearch.org/platform/memories/memories/"
             access_token = self.session['user']['accessToken']           
 
@@ -41,6 +45,7 @@ class FSDecorator:
 
 
         def getMemory(self):
+            """ This method gets a memory from FamilySearch"""
             url = "https://api-integ.familysearch.org/platform/memories/memories/"
             access_token = self.session['user']['accessToken']
 
@@ -57,6 +62,10 @@ class FSDecorator:
             response_status_code = response.status_code
             print("The request returned a status code of " + str(response_status_code))
 
+            #######################################################################################
+            # NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE 
+            # This logic assumes that all the memories are text memories -note that this is invalid
+            #######################################################################################
 
             if response.status_code == 200:
                 root = ElementTree.fromstring(response.text)
@@ -73,10 +82,13 @@ class FSDecorator:
 
     instance = None
     def __init__(self, session):
+        """ The constructor of the FSDecorator class, it creates an instance of the hidden class if
+        need be ."""
         if not FSDecorator.instance:
             FSDecorator.instance = FSDecorator.__FSDecorator(session)
         else:
             FSDecorator.instance.session = session
     
     def getInstance(self):
+        """ Get the single instance of the Singleton Class """
         return FSDecorator.instance
