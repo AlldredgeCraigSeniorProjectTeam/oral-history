@@ -130,7 +130,7 @@ def record_history(intent, session):
 
     # grab the slots
     # slots = event['request']['intent']['slots']
-    story = intent['slots']['story']['value']
+    story = intent['slots']['story']
 
     file = open('/tmp/filename.txt', 'w')
     # file.write("Hello, World! You have uploaded to s3!")
@@ -156,7 +156,7 @@ def record_history(intent, session):
 ##############################################
 # This is what it will look like to use the FSDecorator.
     FS = FSDecorator(session).getInstance()
-    
+
     try:
         FS.postMemory()
     except httpError401Exception, e:
