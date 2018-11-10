@@ -3,6 +3,7 @@ from random import randint as rand
 
 import os
 import requests
+import uuid
 
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
 from ask_sdk_core.handler_input import HandlerInput
@@ -143,7 +144,8 @@ def record_history(intent, session):
     , aws_access_key_id=os.environ['ACCESS_KEY']
     , aws_secret_access_key=os.environ['SECRET_ACCESS_KEY']
     , config=Config(signature_version='s3v4'))
-    s3.Bucket(os.environ['BUCKET_NAME']).put_object(Key='speechTest/testfile.txt', Body=file)
+    s3.Bucket(os.environ['BUCKET_NAME']).put_object(Key='speechTest/'+ str(uuid.uuid4()) +'.txt', 
+                                                    Body=file)
     file.close()
 
     session_attributes = {}
