@@ -160,7 +160,7 @@ def record_history(intent, session):
     FS = FSDecorator(session).getInstance()
 
     try:
-        FS.postMemory()
+        FS.postMemory(story)
     except httpError401Exception, e:
         # This is where you reauthenticate.
         return get_reauthenticate_response()

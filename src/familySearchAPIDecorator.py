@@ -14,12 +14,12 @@ class FSDecorator:
             it stores in its attributes """
             self.session = session
         
-        def postMemory(self):
+        def postMemory(self, story):
             """ This method posts a memory to FamilySearch"""
             url = "https://api-integ.familysearch.org/platform/memories/memories"
             access_token = self.session['user']['accessToken']
 
-            payload = "This is a brand new memory"
+            payload = story
             headers = {
                 'Content-Disposition': "attachment; filename='a_super_memory.txt'",
                 'Content-Type': "text/plain",
