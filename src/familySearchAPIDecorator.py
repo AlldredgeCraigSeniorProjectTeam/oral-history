@@ -30,6 +30,7 @@ class FSDecorator:
 
             if response.status_code == 201:
                 print "The memory was POSTed successfull, response code (201 created)"
+                return "The memory was successfully created."
             elif response.status_code == 401:
                 # 401 error, reauthenticate
                 raise httpError401Exception()
