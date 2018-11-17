@@ -16,6 +16,8 @@ from customExceptions import httpError401Exception, httpError403Exception, httpE
 import boto3
 from botocore.client import Config
 
+DEBUG = True
+
 # --------------- Helpers that build all of the responses ----------------------
 
 def build_speechlet_response(title, output, reprompt_text, should_end_session):
@@ -132,26 +134,28 @@ def record_history(intent, session):
        connect to s3 bucket using env variables in lambda and push it to
        AWS using a unique name to prevent overwrite.
        Additionally attempts to push story to FS as a memory.'''
+    global DEBUG
     # grab the slots
     story = intent['slots']['story']['value'];
 
-    ### S3 FUNCTIONALITY ######
-    # REMOVE: we can leave this for testing and take it out when we finalize
-    file = open('/tmp/filename.txt', 'w')
-    file.write(story)
-    file.close()
+    if DEBUG == True:
+        ### S3 FUNCTIONALITY ######
+        # REMOVE: we can leave this for testing and take it out when we finalize
+        file = open('/tmp/filename.txt', 'w')
+        file.write(story)
+        file.close()
 
-    file = open('/tmp/filename.txt', 'r') # not sure what the purpose of this line is?
+        file = open('/tmp/filename.txt', 'r') # not sure what the purpose of this line is?
 
-    s3 = boto3.resource(
-    's3'
-    , aws_access_key_id=os.environ['ACCESS_KEY']
-    , aws_secret_access_key=os.environ['SECRET_ACCESS_KEY']
-    , config=Config(signature_version='s3v4'))
-    s3.Bucket(os.environ['BUCKET_NAME']).put_object(Key='speechTest/'+ gen_file_name() +'.txt',
-                                                    Body=file)
-    file.close()
-    ##########################################
+        s3 = boto3.resource(
+        's3'
+        , aws_access_key_id=os.environ['ACCESS_KEY']
+        , aws_secret_access_key=os.environ['SECRET_ACCESS_KEY']
+        , config=Config(signature_version='s3v4'))
+        s3.Bucket(os.environ['BUCKET_NAME']).put_object(Key='speechTest/'+ gen_file_name() +'.txt',
+                                                        Body=file)
+        file.close()
+        ##########################################
 
     session_attributes = {}
     reprompt_text = None
