@@ -88,7 +88,6 @@ def read_history_intent_handler(handler_input):
         SimpleCard("Family History", speech_text)).set_should_end_session(
         True).response
 
-
 @sb.request_handler(can_handle_func=is_request_type("LaunchRequest"))
 def launch_request_handler(handler_input):
     """ Handler for the skill launch. Called when the user launches the skill without specifying what they want """
