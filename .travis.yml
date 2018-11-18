@@ -24,4 +24,4 @@ deploy:
   role: "arn:aws:iam::523059797638:role/service-role/oral_history"
   runtime: "python2.7"
   module_name: "oralHistory"
-  handler_name: "lambda_handler"
+  handler_name: "handler"
