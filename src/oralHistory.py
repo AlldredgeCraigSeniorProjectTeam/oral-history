@@ -10,76 +10,12 @@ from ask_sdk_core.handler_input import HandlerInput
 from familySearchAPIDecorator import FSDecorator
 from customExceptions import httpError401Exception, httpError403Exception, httpErrorUnhandledException
 
-<<<<<<< HEAD
-import boto3
-from botocore.client import Config
-
-DEBUG = True
-
-# --------------- Helpers that build all of the responses ----------------------
-
-def build_speechlet_response(title, output, reprompt_text, should_end_session):
-    return {
-        'outputSpeech': {
-            'type': 'SSML',
-            #'text': output
-            'ssml': '<speak>'+output+'</speak>'
-        },
-        'card': {
-            'type': 'Simple',
-            'title': title,
-            'content': output
-        },
-        'reprompt': {
-            'outputSpeech': {
-                'type': 'PlainText',
-                'text': reprompt_text
-            }
-        },
-        'shouldEndSession': should_end_session
-    }
-
-def build_link_account_response():
-    return {
-        "outputSpeech": {"type":"PlainText","text":"Welcome to Family History! To get the most out of this Skill, please link your account."},
-        "card": {
-            "type": "LinkAccount"
-        }
-    }
-
-def build_reauthenticate_response():
-    return {
-        "outputSpeech": {"type":"PlainText","text":"Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."},
-        "card": {
-            "type": "LinkAccount"
-        },
-        'shouldEndSession' : True
-    }
-
-def build_response(session_attributes, speechlet_response):
-    return {
-        'version': '1.0',
-        'sessionAttributes': session_attributes,
-        'response': speechlet_response
-    }
-
-# --------------- Helper that handles logging ------------------
-def log(event):
-    print('Logged event: {}'.format(event))
-
-# --------------- Functions that control the skill's behavior ------------------
-
-def get_welcome_response():
-    """ If we wanted to initialize the session to have some attributes we could
-    add those here
-    """
-=======
 from ask_sdk_model.ui import SimpleCard
 from ask_sdk_model.ui import LinkAccountCard
 from ask_sdk_model import Response
->>>>>>> de99e8c... Rewrote oralHistory to use decorator pattern with ASK generated card responses
 
 sb = SkillBuilder()
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -87,21 +23,19 @@ logger.setLevel(logging.INFO)
 
 @sb.request_handler(can_handle_func=is_intent_name("record_history"))
 def record_history_intent_handler(handler_input):
-    """ Grab raw user text from AMAZON.custom_slot and write it to generic file
-       connect to s3 bucket using env variables in lambda and push it to
-       AWS using a unique name to prevent overwrite.
-       Additionally attempts to push story to FS as a memory. """
+    """ Grab raw user text from AMAZON.custom_slot and write it to generic file.
+       Then push story to FS as a memory. """
 
-    # Grab the session
-    session = handler_input.request_envelope.session
-
+    # Grab the access token
+    access_token = handler_input.request_envelope.session.user.access_token
+    
     # Grab the intent
     intent = handler_input.request_envelope.request.intent
 
     # Grab the slots
-    story = intent['slots']['story']['value']
+    story = intent.slots['story'].value
 
-    FS = FSDecorator(session).getInstance()
+    FS = FSDecorator(access_token).getInstance()
 
     try:
         speech_text = FS.postMemory(story)
@@ -124,64 +58,17 @@ def record_history_intent_handler(handler_input):
         SimpleCard("Family History", speech_text)).set_should_end_session(
         True).response
 
-
-<<<<<<< HEAD
-    try:
-        # Try getting the access token, as a test of whether the user has linked the account
-        access_token = session['user']['accessToken']
-        return get_welcome_response()
-    except KeyError, e:
-        return get_link_account_response()
-
-def gen_file_name():
-    '''Use to create unique entry'''
-    return str(uuid.uuid4())
-
-def record_history(intent, session):
-    '''Grab raw user text from AMAZON.custom_slot and write it to generic file
-       connect to s3 bucket using env variables in lambda and push it to
-       AWS using a unique name to prevent overwrite.
-       Additionally attempts to push story to FS as a memory.'''
-    global DEBUG
-    # grab the slots
-    story = intent['slots']['story']['value'];
-
-    if DEBUG == True:
-        ### S3 FUNCTIONALITY ######
-        # REMOVE: we can leave this for testing and take it out when we finalize
-        file = open('/tmp/filename.txt', 'w')
-        file.write(story)
-        file.close()
-
-        file = open('/tmp/filename.txt', 'r') # not sure what the purpose of this line is?
-
-        s3 = boto3.resource(
-        's3'
-        , aws_access_key_id=os.environ['ACCESS_KEY']
-        , aws_secret_access_key=os.environ['SECRET_ACCESS_KEY']
-        , config=Config(signature_version='s3v4'))
-        s3.Bucket(os.environ['BUCKET_NAME']).put_object(Key='speechTest/'+ gen_file_name() +'.txt',
-                                                        Body=file)
-        file.close()
-        ##########################################
-
-    session_attributes = {}
-    reprompt_text = None
-    card_title = "Record History"
-
-    speech_output = "Thanks for invoking Record History"
-    should_end_session = False
-
-##############################################
-# This is what it will look like to use the FSDecorator.
-=======
 @sb.request_handler(can_handle_func=is_intent_name("read_history"))
 def read_history_intent_handler(handler_input):
     """ Read a story from FamilySearch """
-    session = handler_input.request_envelope.session
 
->>>>>>> de99e8c... Rewrote oralHistory to use decorator pattern with ASK generated card responses
-    FS = FSDecorator(session).getInstance()
+    # Grab the session attributes
+    session_attributes = handler_input.attributes_manager.session_attributes
+
+    # Grab the access token
+    access_token = handler_input.request_envelope.session.user.access_token
+    
+    FS = FSDecorator(access_token).getInstance()
 
     try:
         speech_text = FS.getMemory()
@@ -204,32 +91,23 @@ def read_history_intent_handler(handler_input):
         SimpleCard("Family History", speech_text)).set_should_end_session(
         True).response
 
-<<<<<<< HEAD
-def read_history(intent, session):
-    '''Connect to FS, if successful retrieve a memory else attempt reauth'''
-    session_attributes = {}
-    reprompt_text = None
-    card_title = "Read History"
-    should_end_session = False
-=======
->>>>>>> de99e8c... Rewrote oralHistory to use decorator pattern with ASK generated card responses
 
 @sb.request_handler(can_handle_func=is_request_type("LaunchRequest"))
 def launch_request_handler(handler_input):
     """ Handler for the skill launch. Called when the user launches the skill without specifying what they want """
 
-    # Grab the session
+    # Grab the session 
     session = handler_input.request_envelope.session
 
     # Grab the request ID 
     requestId = handler_input.request_envelope.request.requestId
 
-    print("on_launch requestId=" + requestId + ", sessionId=" + session['sessionId'])
+    print("on_launch requestId=" + requestId + ", sessionId=" + session['session_id'])
 
     try:
         # Try getting the access token, as a test of whether the user has linked the account
-        access_token = session['user']['accessToken']
-        
+        access_token = handler_input.request_envelope.session.user.access_token
+    
         speech_text = "Welcome to Family History! Try saying 'tell me a story'"
 
         return handler_input.response_builder.speak(speech_text).set_card(

@@ -9,21 +9,20 @@ class FSDecorator:
     # Adapted from https://python-3-patterns-idioms-test.readthedocs.io/en/latest/Singleton.html
 
     class __FSDecorator:
-        def __init__(self, session):
-            """ The constructor for the FSDecorator class takes one parameter, the session, which 
+        def __init__(self, access_token):
+            """ The constructor for the FSDecorator class takes one parameter, the access token, which 
             it stores in its attributes """
-            self.session = session
+            self.access_token = access_token
         
         def postMemory(self, story):
             """ This method posts a memory to FamilySearch"""
             url = "https://api-integ.familysearch.org/platform/memories/memories"
-            access_token = self.session['user']['accessToken']
-
+            
             payload = story
             headers = {
                 'Content-Disposition': "attachment; filename='a_super_memory.txt'",
                 'Content-Type': "text/plain",
-                'Authorization': "Bearer " + access_token
+                'Authorization': "Bearer " + self.access_token
                 }
 
             response = requests.request("POST", url, data=payload, headers=headers)
@@ -44,11 +43,10 @@ class FSDecorator:
         def getRandomMemoryID(self):
             """ This method randomly chooses the ID of one of the memories available on FamilySearch """
             url = "https://api-integ.familysearch.org/platform/memories/memories/"
-            access_token = self.session['user']['accessToken']           
 
             headers = {
                 'Accept': "application/json",
-                'Authorization': "Bearer " + access_token
+                'Authorization': "Bearer " + self.access_token
                 }
 
             response = requests.request("GET", url, headers=headers)
@@ -79,11 +77,10 @@ class FSDecorator:
         def getMemory(self):
             """ This method gets a memory from FamilySearch"""
             url = "https://api-integ.familysearch.org/platform/memories/memories/"
-            access_token = self.session['user']['accessToken']
-
+            
             headers = {
                 'Accept': "application/json",
-                'Authorization': "Bearer " + access_token,
+                'Authorization': "Bearer " + self.access_token,
                 }
 
             # If this raises a 401 exception, we want it to bubble up to the calling function
@@ -117,13 +114,13 @@ class FSDecorator:
             return memoryText
 
     instance = None
-    def __init__(self, session):
+    def __init__(self, access_token):
         """ The constructor of the FSDecorator class, it creates an instance of the hidden class if
         need be ."""
         if not FSDecorator.instance:
-            FSDecorator.instance = FSDecorator.__FSDecorator(session)
+            FSDecorator.instance = FSDecorator.__FSDecorator(access_token)
         else:
-            FSDecorator.instance.session = session
+            FSDecorator.instance.access_token = access_token
     
     def getInstance(self):
         """ Get the single instance of the Singleton Class """
