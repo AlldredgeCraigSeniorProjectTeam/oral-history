@@ -22,7 +22,7 @@ deploy:
 - provider: lambda
   access_key_id: $s3_access_key_id
   secret_access_key: $s3_secret_key
-  function_name: "oralHistory"
+  function_name: "oralHistoryDev"
   zip: skill.zip
   region: "us-east-1"
   role: "arn:aws:iam::523059797638:role/service-role/oral_history"
