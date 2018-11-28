@@ -63,7 +63,7 @@ def read_history_intent_handler(handler_input):
     """ Read a story from FamilySearch """
 
     # Grab the session attributes
-    session_attributes = handler_input.attributes_manager.session_attributes
+    # session_attributes = handler_input.attributes_manager.session_attributes
 
     # Grab the access token
     access_token = handler_input.request_envelope.session.user.access_token

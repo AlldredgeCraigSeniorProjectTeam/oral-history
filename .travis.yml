@@ -6,13 +6,16 @@ before_deploy:
 - zip -r ../skill.zip *
 - cd ..
 deploy:
-- provider: s3
+- provider: lambda
   access_key_id: $s3_access_key_id
   secret_access_key: $s3_secret_key
-  bucket: alldredgecraigseniorproject
-  local-dir: src
-  upload-dir: src
-  region: us-east-1
+  function_name: "oralHistory"
+  zip: skill.zip
+  region: "us-east-1"
+  role: "arn:aws:iam::523059797638:role/service-role/oral_history"
+  runtime: "python2.7"
+  module_name: "oralHistory"
+  handler_name: "handler"
   on:
     branch: master
     repo: AlldredgeCraigSeniorProjectTeam/oral-history
@@ -27,5 +30,5 @@ deploy:
   module_name: "oralHistory"
   handler_name: "handler"
   on:
-    branch: master
+    branch: dev
     repo: AlldredgeCraigSeniorProjectTeam/oral-history
