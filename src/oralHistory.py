@@ -51,6 +51,12 @@ def record_history_intent_handler(handler_input):
         return handler_input.response_builder.speak(speech_text).set_card(
             LinkAccountCard()).set_should_end_session(
             True).response
+    except TypeError, e:
+        # This is where we authenticate because a brand new user has no access token whatsoever, so he got a type error.
+        speech_text = "Welcome to Family History! To get the most out of this Skill, please link your account."
+        return handler_input.response_builder.speak(speech_text).set_card(
+            LinkAccountCard()).set_should_end_session(
+            True).response
     # Once again, we are intentionally not catching httpErrorUnhandledException
 
     # If there are no exceptions, read the response back to the user.
@@ -81,6 +87,12 @@ def read_history_intent_handler(handler_input):
     except httpError403Exception, e:
         # This is where we reauthenticate because we got a 403 response.
         speech_text = "Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."
+        return handler_input.response_builder.speak(speech_text).set_card(
+            LinkAccountCard()).set_should_end_session(
+            True).response
+    except TypeError, e:
+        # This is where we authenticate because a brand new user has no access token whatsoever, so he got a type error.
+        speech_text = "Welcome to Family History! To get the most out of this Skill, please link your account."
         return handler_input.response_builder.speak(speech_text).set_card(
             LinkAccountCard()).set_should_end_session(
             True).response
