@@ -12,14 +12,41 @@ from customExceptions import httpError401Exception, httpError403Exception, httpE
 
 from ask_sdk_model.ui import SimpleCard
 from ask_sdk_model.ui import LinkAccountCard
-from ask_sdk_model import Response
+from ask_sdk_model import Response, dialog
 
 sb = SkillBuilder()
-
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+@sb.request_handler(can_handle_func=is_request_type("LaunchRequest"))
+def launch_request_handler(handler_input):
+    """ Handler for the skill launch. Called when the user launches the skill without specifying what they want """
+
+    # Grab the session 
+    session = handler_input.request_envelope.session
+
+    # Grab the request ID 
+    requestId = handler_input.request_envelope.request.requestId
+
+    print("on_launch requestId=" + requestId + ", sessionId=" + session['session_id'])
+
+    try:
+        # Try getting the access token, as a test of whether the user has linked the account
+        access_token = handler_input.request_envelope.session.user.access_token
+    
+        speech_text = "Welcome to Family History! Try saying 'tell me a story'"
+
+        return handler_input.response_builder.speak(speech_text).set_card(
+            SimpleCard("Family History", speech_text)).set_should_end_session(
+            False).response
+        
+    except KeyError, e:
+        speech_text = "Welcome to Family History! To get the most out of this Skill, please link your account."
+
+        return handler_input.response_builder.speak().set_card(
+            SimpleCard("Family History", speech_text)).set_should_end_session(
+            True).response
 
 @sb.request_handler(can_handle_func=is_intent_name("record_history"))
 def record_history_intent_handler(handler_input):
@@ -103,36 +130,23 @@ def read_history_intent_handler(handler_input):
         SimpleCard("Family History", speech_text)).set_should_end_session(
         True).response
 
+@sb.request_handler(
+    can_handle_func=lambda handler_input:
+        is_intent_name("interview_me") and
+        handler_input.request_envelope.request.dialog_state.value != "COMPLETED")
+def in_progress_interview_me_intent_handler(handler_input):
+    current_intent = handler_input.request_envelope.request.intent.name
+    my_delegate_directive = dialog.delegate_directive.DelegateDirective()
 
-@sb.request_handler(can_handle_func=is_request_type("LaunchRequest"))
-def launch_request_handler(handler_input):
-    """ Handler for the skill launch. Called when the user launches the skill without specifying what they want """
-
-    # Grab the session 
-    session = handler_input.request_envelope.session
-
-    # Grab the request ID 
-    requestId = handler_input.request_envelope.request.requestId
-
-    print("on_launch requestId=" + requestId + ", sessionId=" + session['session_id'])
-
-    try:
-        # Try getting the access token, as a test of whether the user has linked the account
-        access_token = handler_input.request_envelope.session.user.access_token
+    return handler_input.response_builder.add_directive(my_delegate_directive).response
     
-        speech_text = "Welcome to Family History! Try saying 'tell me a story'"
+@sb.request_handler(can_handle_func=lambda handler_input:
+        is_intent_name("interview_me"))
+def completed_interview_me_intent_handler(handler_input):
+    speech_text = "Thanks for the interview!"
 
-        return handler_input.response_builder.speak(speech_text).set_card(
-            SimpleCard("Family History", speech_text)).set_should_end_session(
-            False).response
-        
-    except KeyError, e:
-        speech_text = "Welcome to Family History! To get the most out of this Skill, please link your account."
-
-        return handler_input.response_builder.speak().set_card(
-            SimpleCard("Family History", speech_text)).set_should_end_session(
-            True).response
-
+    return handler_input.response_builder.speak(speech_text).set_card(
+        SimpleCard("Family History", speech_text)).response
 
 @sb.request_handler(can_handle_func=is_intent_name("AMAZON.HelpIntent"))
 def help_intent_handler(handler_input):
@@ -154,7 +168,6 @@ def cancel_and_stop_intent_handler(handler_input):
     return handler_input.response_builder.speak(speech_text).set_card(
         SimpleCard("Family History", speech_text)).response
 
-
 @sb.request_handler(can_handle_func=is_intent_name("AMAZON.FallbackIntent"))
 def fallback_handler(handler_input):
     """ The fallback handler """
@@ -164,12 +177,10 @@ def fallback_handler(handler_input):
     handler_input.response_builder.speak(speech).ask(reprompt)
     return handler_input.response_builder.response
 
-
 @sb.request_handler(can_handle_func=is_request_type("SessionEndedRequest"))
 def session_ended_request_handler(handler_input):
     """Handler for Session End."""
     return handler_input.response_builder.response
-
 
 @sb.exception_handler(can_handle_func=lambda i, e: True)
 def all_exception_handler(handler_input, exception):
