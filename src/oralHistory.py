@@ -26,11 +26,6 @@ def launch_request_handler(handler_input):
     # Grab the session 
     session = handler_input.request_envelope.session
 
-    # Grab the request ID 
-    requestId = handler_input.request_envelope.request.requestId
-
-    print("on_launch requestId=" + requestId + ", sessionId=" + session['session_id'])
-
     try:
         # Try getting the access token, as a test of whether the user has linked the account
         access_token = handler_input.request_envelope.session.user.access_token
@@ -147,20 +142,17 @@ def before_starting_interview_me_intent_handler(handler_input):
         # This is where we reauthenticate because we got a 401 response.
         speech_text = "Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."
         return handler_input.response_builder.speak(speech_text).set_card(
-            LinkAccountCard()).set_should_end_session(
-            True).response
+            LinkAccountCard()).set_should_end_session(True).response
     except httpError403Exception, e:
         # This is where we reauthenticate because we got a 403 response.
         speech_text = "Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."
         return handler_input.response_builder.speak(speech_text).set_card(
-            LinkAccountCard()).set_should_end_session(
-            True).response
+            LinkAccountCard()).set_should_end_session(True).response
     except TypeError, e:
         # This is where we authenticate because a brand new user has no access token whatsoever, so he got a type error.
         speech_text = "Welcome to Family History! To get the most out of this Skill, please link your account."
         return handler_input.response_builder.speak(speech_text).set_card(
-            LinkAccountCard()).set_should_end_session(
-            True).response
+            LinkAccountCard()).set_should_end_session(True).response
     # We are intentionally not catching httpErrorUnhandledException
 
     my_delegate_directive = dialog.delegate_directive.DelegateDirective()
@@ -206,24 +198,21 @@ def completed_interview_me_intent_handler(handler_input):
         # This is where we reauthenticate because we got a 401 response.
         speech_text = "Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."
         return handler_input.response_builder.speak(speech_text).set_card(
-            LinkAccountCard()).set_should_end_session(
-            True).response
+            LinkAccountCard()).set_should_end_session(True).response
     except httpError403Exception, e:
         # This is where we reauthenticate because we got a 403 response.
         speech_text = "Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."
         return handler_input.response_builder.speak(speech_text).set_card(
-            LinkAccountCard()).set_should_end_session(
-            True).response
+            LinkAccountCard()).set_should_end_session(True).response
     except TypeError, e:
         # This is where we authenticate because a brand new user has no access token whatsoever, so he got a type error.
         speech_text = "Welcome to Family History! To get the most out of this Skill, please link your account."
         return handler_input.response_builder.speak(speech_text).set_card(
-            LinkAccountCard()).set_should_end_session(
-            True).response
+            LinkAccountCard()).set_should_end_session(True).response
     # Once again, we are intentionally not catching httpErrorUnhandledException
 
     return handler_input.response_builder.speak(speech_text).set_card(
-        SimpleCard("Family History", speech_text)).set_should_end_session(True).response
+        SimpleCard("Family History", speech_text)).response
 
 @sb.request_handler(can_handle_func=is_intent_name("AMAZON.HelpIntent"))
 def help_intent_handler(handler_input):
@@ -243,7 +232,7 @@ def cancel_and_stop_intent_handler(handler_input):
     speech_text = "Goodbye!  Come back soon!"
 
     return handler_input.response_builder.speak(speech_text).set_card(
-        SimpleCard("Family History", speech_text)).response
+        SimpleCard("Family History", speech_text)).set_should_end_session(True).response
 
 @sb.request_handler(can_handle_func=is_intent_name("AMAZON.FallbackIntent"))
 def fallback_handler(handler_input):
@@ -268,6 +257,6 @@ def all_exception_handler(handler_input, exception):
     speech = "There was a problem. Please try again!"
     handler_input.response_builder.speak(speech).ask(speech)
 
-    return handler_input.response_builder.response
+    return handler_input.response_builder.set_should_end_session(True).response
 
 handler = sb.lambda_handler()
