@@ -25,7 +25,7 @@ deploy:
   function_name: "oralHistoryDev"
   zip: skill.zip
   region: "us-east-1"
-  role: "arn:aws:iam::523059797638:role/service-role/oral_history"
+  role: "arn:aws:iam::523059797638:role/service-role/oralHistoryDevRole"
   runtime: "python2.7"
   module_name: "oralHistory"
   handler_name: "handler"
