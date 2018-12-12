@@ -222,7 +222,6 @@ def in_progress_interview_me_intent_handler(handler_input):
         handler_input.request_envelope.request.intent.name == "interview_me" and
         handler_input.request_envelope.request.dialog_state.value == "COMPLETED")
 def completed_interview_me_intent_handler(handler_input):
-    speech_text = "Thanks for the interview!"
 
     # Grab the access token
     access_token = handler_input.request_envelope.session.user.access_token
@@ -261,6 +260,8 @@ def completed_interview_me_intent_handler(handler_input):
         return handler_input.response_builder.speak(speech_text).set_card(
             LinkAccountCard()).set_should_end_session(False).response
     # Once again, we are intentionally not catching httpErrorUnhandledException
+
+    speech_text = "This interview was successfully added to Family Search! Thanks for the interview!"
 
     return handler_input.response_builder.speak(speech_text).set_card(
         SimpleCard("Family History", speech_text)).set_should_end_session(False).response
