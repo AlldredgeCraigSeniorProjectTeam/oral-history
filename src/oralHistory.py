@@ -118,7 +118,7 @@ def read_history_intent_handler(handler_input):
 
 @sb.request_handler(
     can_handle_func=lambda handler_input:
-        is_intent_name("interview_me") and
+        handler_input.request_envelope.request.intent.name == "interview_me" and
         handler_input.request_envelope.request.dialog_state.value == "STARTED")
 def before_starting_interview_me_intent_handler(handler_input):
 
@@ -151,7 +151,7 @@ def before_starting_interview_me_intent_handler(handler_input):
 
 @sb.request_handler(
     can_handle_func=lambda handler_input:
-        is_intent_name("interview_me") and
+        handler_input.request_envelope.request.intent.name == "interview_me" and
         handler_input.request_envelope.request.dialog_state.value == "IN_PROGRESS")
 def in_progress_interview_me_intent_handler(handler_input):
     current_intent = handler_input.request_envelope.request.intent.name
@@ -161,7 +161,7 @@ def in_progress_interview_me_intent_handler(handler_input):
 
 @sb.request_handler(
     can_handle_func=lambda handler_input:
-        is_intent_name("interview_me") and
+        handler_input.request_envelope.request.intent.name == "interview_me" and
         handler_input.request_envelope.request.dialog_state.value == "COMPLETED")
 def completed_interview_me_intent_handler(handler_input):
     speech_text = "Thanks for the interview!"
