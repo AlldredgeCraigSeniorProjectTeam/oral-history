@@ -28,7 +28,7 @@ class FSDecorator:
             response = requests.request("POST", url, data=payload, headers=headers)
 
             if response.status_code == 201:
-                print "The memory was POSTed successfull, response code (201 created)"
+                print "The memory was successfully created."
                 return "The memory was successfully created."
             elif response.status_code == 401:
                 # 401 error, reauthenticate
