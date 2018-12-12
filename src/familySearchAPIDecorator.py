@@ -1,7 +1,7 @@
 import requests
 import random
 import json
-from customExceptions import httpError401Exception, httpError403Exception, httpErrorUnhandledException
+from customExceptions import httpError401Exception, httpError403Exception, httpErrorUnhandledException, httpResponseCode204Exception
 
 
 class FSDecorator:
@@ -65,7 +65,9 @@ class FSDecorator:
                 else:
                     # Return a negative 1 if there are no text memories available
                     return -1
-
+            elif response.status_code == 204:
+                # There are no memories currently
+                raise httpResponseCode204Exception()
             elif response.status_code == 401:
                 # You need to reauthenticate
                 raise httpError401Exception()
@@ -102,6 +104,9 @@ class FSDecorator:
             if response.status_code == 200:
                 responseJsonObj = json.loads(response.text)
                 urlOfMemoryText = responseJsonObj['sourceDescriptions'][0]['about']
+            elif response.status_code == 204:
+                # There are no memories currently
+                raise httpResponseCode204Exception()
             elif response.status_code == 401:
                 # You need to reauthenticate
                 raise httpError401Exception()

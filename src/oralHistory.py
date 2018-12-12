@@ -8,7 +8,7 @@ from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_core.handler_input import HandlerInput
 
 from familySearchAPIDecorator import FSDecorator
-from customExceptions import httpError401Exception, httpError403Exception, httpErrorUnhandledException
+from customExceptions import httpError401Exception, httpError403Exception, httpErrorUnhandledException, httpResponseCode204Exception
 
 from ask_sdk_model.ui import SimpleCard
 from ask_sdk_model.ui import LinkAccountCard
@@ -54,7 +54,11 @@ def before_starting_record_history_intent_handler(handler_input):
     FS = FSDecorator(access_token).getInstance()
 
     try:
+        # We are just getting this memory to verify that the user is authenticated. Speech_text will be discarded
         speech_text = FS.getMemory()
+    except httpResponseCode204Exception:
+        # Do nothing, a 204 means that there were simply no stories in Memories to return
+        pass
     except httpError401Exception, e:
         # This is where we reauthenticate because we got a 401 response.
         speech_text = "Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."
@@ -143,6 +147,9 @@ def read_history_intent_handler(handler_input):
 
     try:
         speech_text = FS.getMemory()
+    except httpResponseCode204Exception:
+        # There were no memories on familysearch
+        speech_text = "No stories were found on Family Search - try saying Interview Me."
     except httpError401Exception, e:
         # This is where we reauthenticate because we got a 401 response.
         speech_text = "Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."
@@ -177,6 +184,9 @@ def before_starting_interview_me_intent_handler(handler_input):
 
     try:
         speech_text = FS.getMemory()
+    except httpResponseCode204Exception:
+        # Do nothing, a 204 means that there were simply no stories in Memories to return
+        pass
     except httpError401Exception, e:
         # This is where we reauthenticate because we got a 401 response.
         speech_text = "Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."
