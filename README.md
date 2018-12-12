@@ -6,16 +6,12 @@
 ### Summary
 This is the senior project repo of Jake Alldredge and Daniel Craig. Our objective is to make an Amazon Alexa skill that interfaces with FamilySearch to collect and upload oral histories via Amazon Echo devices.
 
-The oral-history will be the portion of our project that interacts with Alexa directly. User will dictate an oral history which Alexa
-will then record and upload to FamilySearch.
-
 # Our Stack
- - Node.js
- - Python
- - Amazon Echo Dot (2nd Gen)
+ - Python and Pip
+ - Amazon Echo Dot 
  - Amazon Web Services (AWS)
    - AWS Lambda
-   - Alexa and Amazon Lex
+   - Alexa 
  - Family Search APIs
  - Travis CI
 
@@ -24,32 +20,10 @@ will then record and upload to FamilySearch.
  - Be able to store preserved family stories on FamilySearch
 
 # Our workflow
- - Contact Alexa
- - Creates Lex Conversation
-   - lambda Looks for ancestor
-     - Access FamilySearch w/ API
-     - Record oral history
-     - Return control to Lex
-   - lambda Upload
-     - Ask for confirmation
-     - Access FamilySearch w/ API
-     - Save to Memories
-     - Return control to Lex
-   - lambda Tell me a story about [ancestor]
-     - Access FamilySearch w/ API
-     - Access Memories
-     - Read story
-     - Return control to Lex
+ - Alexa interprets user input per the Dialog Model that we define.
+ - Lambda backend handles intent requests using ASK SDK v.2.
+   - Dependent on the intent recieved, Lambda will do one (or more) of the following:
+     - Tell a story from FamilySearch, using the FamilySearch API and Alexa's text to speech abilities.
+     - Record, transcribe, and upload a story to FamilySearch, using the API and Alexa's speech to text.
+     - Interview the user, and upload the transcript to FamilySearch, using the API and Alexa's speech to text.
 
-# Our team's definitions
-| Term       | Definition |
-|------------|------------|
-| AWS   | Amazon Web Services  |
-| IAM        | Identity and access management.  Where AWS permissions are managed.  |
-| Intent     |            |
-| Invoke     | The canonical term for starting the exection of a Lambda function    |
-| Lambda     | A function that runs on AWS Lambda; no need for server config, etc.  |
-| KMS   | Key Management Service  |
-| Sample     |            |
-| Slot       |            |
-| SSML       |            |
