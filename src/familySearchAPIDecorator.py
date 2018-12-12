@@ -18,17 +18,16 @@ class FSDecorator:
             """ This method posts a memory to FamilySearch"""
             url = "https://api-integ.familysearch.org/platform/memories/memories"
 
+            querystring = {"title":title}
+
             payload = story
             headers = {
-                'Content-Disposition': "attachment; filename='a_super_memory.txt'",
+                'Content-Disposition': "attachment; filename='" + title + ".txt'",
                 'Content-Type': "text/plain",
                 'Authorization': "Bearer " + self.access_token,
-                'titles' : [{
-                    'value' : title
-                    }]
                 }
 
-            response = requests.request("POST", url, data=payload, headers=headers)
+            response = requests.request("POST", url, data=payload, headers=headers, params=querystring)
 
             if response.status_code == 201:
                 print "The memory was successfully created."
