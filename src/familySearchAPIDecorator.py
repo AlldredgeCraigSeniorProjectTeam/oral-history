@@ -23,7 +23,9 @@ class FSDecorator:
                 'Content-Disposition': "attachment; filename='a_super_memory.txt'",
                 'Content-Type': "text/plain",
                 'Authorization': "Bearer " + self.access_token,
-                'title': title
+                'titles' : [{
+                    'value' : title
+                    }]
                 }
 
             response = requests.request("POST", url, data=payload, headers=headers)
