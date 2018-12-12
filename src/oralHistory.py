@@ -102,11 +102,12 @@ def completed_record_history_intent_handler(handler_input):
 
     # Grab the slots
     story = intent.slots['story'].value
+    title = intent.slots['title'].value
 
     FS = FSDecorator(access_token).getInstance()
 
     try:
-        speech_text = FS.postMemory(story)
+        speech_text = FS.postMemory(story,title)
     except httpError401Exception, e:
         # This is where we reauthenticate because we got a 401 response.
         speech_text = "Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."

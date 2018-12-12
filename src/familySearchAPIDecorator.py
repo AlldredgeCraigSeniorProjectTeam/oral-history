@@ -10,19 +10,20 @@ class FSDecorator:
 
     class __FSDecorator:
         def __init__(self, access_token):
-            """ The constructor for the FSDecorator class takes one parameter, the access token, which 
+            """ The constructor for the FSDecorator class takes one parameter, the access token, which
             it stores in its attributes """
             self.access_token = access_token
-        
-        def postMemory(self, story):
+
+        def postMemory(self, story, title = ""):
             """ This method posts a memory to FamilySearch"""
             url = "https://api-integ.familysearch.org/platform/memories/memories"
-            
+
             payload = story
             headers = {
                 'Content-Disposition': "attachment; filename='a_super_memory.txt'",
                 'Content-Type': "text/plain",
-                'Authorization': "Bearer " + self.access_token
+                'Authorization': "Bearer " + self.access_token,
+                'title': title
                 }
 
             response = requests.request("POST", url, data=payload, headers=headers)
@@ -77,7 +78,7 @@ class FSDecorator:
         def getMemory(self):
             """ This method gets a memory from FamilySearch"""
             url = "https://api-integ.familysearch.org/platform/memories/memories/"
-            
+
             headers = {
                 'Accept': "application/json",
                 'Authorization': "Bearer " + self.access_token,
@@ -90,8 +91,8 @@ class FSDecorator:
             if  id == -1:
                 speech_output = "There are no memories available.  Please try recording a new memory so that you'll have something to listen to."
                 return speech_output
-            
-            # We passed the -1 check, so assume that the id is good. 
+
+            # We passed the -1 check, so assume that the id is good.
             response = requests.request("GET", url+id, headers=headers)
 
             response_status_code = response.status_code
@@ -108,7 +109,7 @@ class FSDecorator:
             else:
                 # Unhandled status code
                 raise httpErrorUnhandledException(response_status_code)
-        
+
             memoryTextResponse = requests.request("GET", urlOfMemoryText, headers=headers)
             memoryText = memoryTextResponse.text
             return memoryText
@@ -121,7 +122,7 @@ class FSDecorator:
             FSDecorator.instance = FSDecorator.__FSDecorator(access_token)
         else:
             FSDecorator.instance.access_token = access_token
-    
+
     def getInstance(self):
         """ Get the single instance of the Singleton Class """
         return FSDecorator.instance
