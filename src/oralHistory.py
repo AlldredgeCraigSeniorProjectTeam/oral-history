@@ -44,9 +44,9 @@ def launch_request_handler(handler_input):
 
 @sb.request_handler(
     can_handle_func=lambda handler_input:
-        handler_input.request_envelope.request.intent.name == "record_history" and
+        handler_input.request_envelope.request.intent.name == "ask_for_a_memory" and
         handler_input.request_envelope.request.dialog_state.value == "STARTED")
-def before_starting_record_history_intent_handler(handler_input):
+def before_starting_ask_for_a_memory_intent_handler(handler_input):
 
    # Grab the access token
     access_token = handler_input.request_envelope.session.user.access_token
@@ -81,21 +81,19 @@ def before_starting_record_history_intent_handler(handler_input):
 
 @sb.request_handler(
     can_handle_func=lambda handler_input:
-        handler_input.request_envelope.request.intent.name == "record_history" and
+        handler_input.request_envelope.request.intent.name == "ask_for_a_memory" and
         handler_input.request_envelope.request.dialog_state.value == "IN_PROGRESS")
-def in_progress_record_history_intent_handler(handler_input):
+def in_progress_ask_for_a_memory_intent_handler(handler_input):
     current_intent = handler_input.request_envelope.request.intent.name
     my_delegate_directive = dialog.delegate_directive.DelegateDirective()
 
     return handler_input.response_builder.add_directive(my_delegate_directive).set_should_end_session(False).response
 
-# @sb.request_handler(can_handle_func=is_intent_name("record_history"))
-# def record_history_intent_handler(handler_input):
 @sb.request_handler(
     can_handle_func=lambda handler_input:
-        handler_input.request_envelope.request.intent.name == "record_history" and
+        handler_input.request_envelope.request.intent.name == "ask_for_a_memory" and
         handler_input.request_envelope.request.dialog_state.value == "COMPLETED")
-def completed_record_history_intent_handler(handler_input):
+def completed_ask_for_a_memory_intent_handler(handler_input):
     """ Grab raw user text from AMAZON.custom_slot and write it to FS as a memory. """
 
     # Grab the access token
@@ -112,6 +110,45 @@ def completed_record_history_intent_handler(handler_input):
 
     try:
         speech_text = FS.postMemory(story,title)
+    except httpError401Exception, e:
+        # This is where we reauthenticate because we got a 401 response.
+        speech_text = "Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."
+        return handler_input.response_builder.speak(speech_text).set_card(
+            LinkAccountCard()).set_should_end_session(False).response
+    except httpError403Exception, e:
+        # This is where we reauthenticate because we got a 403 response.
+        speech_text = "Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."
+        return handler_input.response_builder.speak(speech_text).set_card(
+            LinkAccountCard()).set_should_end_session(False).response
+    except TypeError, e:
+        # This is where we authenticate because a brand new user has no access token whatsoever, so he got a type error.
+        speech_text = "Welcome to Family History! To get the most out of this Skill, please link your account."
+        return handler_input.response_builder.speak(speech_text).set_card(
+            LinkAccountCard()).set_should_end_session(False).response
+    # Once again, we are intentionally not catching httpErrorUnhandledException
+
+    # If there are no exceptions, read the response back to the user.
+    return handler_input.response_builder.speak(speech_text).set_card(
+        SimpleCard("Family History", speech_text)).set_should_end_session(False).response
+
+@sb.request_handler(can_handle_func=is_intent_name("record_history"))
+def record_history_intent_handler(handler_input):
+    """ Grab raw user text from AMAZON.custom_slot and write it to generic file.
+       Then push story to FS as a memory. """
+
+    # Grab the access token
+    access_token = handler_input.request_envelope.session.user.access_token
+    
+    # Grab the intent
+    intent = handler_input.request_envelope.request.intent
+
+    # Grab the slots
+    story = intent.slots['recorded_story'].value
+
+    FS = FSDecorator(access_token).getInstance()
+
+    try:
+        speech_text = FS.postMemory(story)
     except httpError401Exception, e:
         # This is where we reauthenticate because we got a 401 response.
         speech_text = "Your session has expired.  Please proceed to the Alexa app to sign in again using the Link Account button."
