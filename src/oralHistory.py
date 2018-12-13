@@ -30,7 +30,7 @@ def launch_request_handler(handler_input):
         # Try getting the access token, as a test of whether the user has linked the account
         access_token = handler_input.request_envelope.session.user.access_token
 
-        speech_text = "Welcome to Family History! Try saying 'tell me a story'"
+        speech_text = "Welcome to Family History! Try saying help for some examples of commands you can use."
 
         return handler_input.response_builder.speak(speech_text).set_card(
             SimpleCard("Family History", speech_text)).set_should_end_session(
@@ -306,7 +306,7 @@ def completed_interview_me_intent_handler(handler_input):
 @sb.request_handler(can_handle_func=is_intent_name("AMAZON.HelpIntent"))
 def help_intent_handler(handler_input):
     """Handler for Help Intent."""
-    speech_text = "Welcome to Family History! Try saying 'tell me a story'"
+    speech_text = "Try saying tell me a story, record a story, ask me for a memory, or interview me."
 
     return handler_input.response_builder.speak(speech_text).set_card(
         SimpleCard("Family History", speech_text)).set_should_end_session(False).response
@@ -326,7 +326,7 @@ def cancel_and_stop_intent_handler(handler_input):
 @sb.request_handler(can_handle_func=is_intent_name("AMAZON.FallbackIntent"))
 def fallback_handler(handler_input):
     """ The fallback handler """
-    speech = ("Try saying 'tell me a story'.")
+    speech = ("I'm sorry, I didn't understand you. Please try again.")
     reprompt = "I'm sorry, please try to speak more clearly!"
     handler_input.response_builder.speak(speech).ask(reprompt)
     return handler_input.response_builder.response
