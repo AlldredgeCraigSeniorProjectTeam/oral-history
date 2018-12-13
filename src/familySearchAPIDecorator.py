@@ -14,7 +14,7 @@ class FSDecorator:
             it stores in its attributes """
             self.access_token = access_token
 
-        def postMemory(self, story, title = ""):
+        def postMemory(self, story, title = "Story from Alexa"):
             """ This method posts a memory to FamilySearch"""
             url = "https://api-integ.familysearch.org/platform/memories/memories"
 
