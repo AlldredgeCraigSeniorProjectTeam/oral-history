@@ -46,7 +46,7 @@ def launch_request_handler(handler_input):
     can_handle_func=lambda handler_input:
         handler_input.request_envelope.request.intent.name == "ask_for_a_memory" and
         handler_input.request_envelope.request.dialog_state.value == "STARTED")
-def before_starting_record_history_intent_handler(handler_input):
+def before_starting_ask_for_a_memory_intent_handler(handler_input):
 
    # Grab the access token
     access_token = handler_input.request_envelope.session.user.access_token
@@ -83,7 +83,7 @@ def before_starting_record_history_intent_handler(handler_input):
     can_handle_func=lambda handler_input:
         handler_input.request_envelope.request.intent.name == "ask_for_a_memory" and
         handler_input.request_envelope.request.dialog_state.value == "IN_PROGRESS")
-def in_progress_record_history_intent_handler(handler_input):
+def in_progress_ask_for_a_memory_intent_handler(handler_input):
     current_intent = handler_input.request_envelope.request.intent.name
     my_delegate_directive = dialog.delegate_directive.DelegateDirective()
 
@@ -93,7 +93,7 @@ def in_progress_record_history_intent_handler(handler_input):
     can_handle_func=lambda handler_input:
         handler_input.request_envelope.request.intent.name == "ask_for_a_memory" and
         handler_input.request_envelope.request.dialog_state.value == "COMPLETED")
-def completed_record_history_intent_handler(handler_input):
+def completed_ask_for_a_memory_intent_handler(handler_input):
     """ Grab raw user text from AMAZON.custom_slot and write it to FS as a memory. """
 
     # Grab the access token
@@ -143,7 +143,7 @@ def record_history_intent_handler(handler_input):
     intent = handler_input.request_envelope.request.intent
 
     # Grab the slots
-    story = intent.slots['story'].value
+    story = intent.slots['recorded_story'].value
 
     FS = FSDecorator(access_token).getInstance()
 
@@ -168,7 +168,7 @@ def record_history_intent_handler(handler_input):
 
     # If there are no exceptions, read the response back to the user.
     return handler_input.response_builder.speak(speech_text).set_card(
-SimpleCard("Family History", speech_text)).set_should_end_session(False).response
+        SimpleCard("Family History", speech_text)).set_should_end_session(False).response
 
 @sb.request_handler(can_handle_func=is_intent_name("read_history"))
 def read_history_intent_handler(handler_input):
