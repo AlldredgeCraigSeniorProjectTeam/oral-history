@@ -44,7 +44,7 @@ def launch_request_handler(handler_input):
 
 @sb.request_handler(
     can_handle_func=lambda handler_input:
-        handler_input.request_envelope.request.intent.name == "record_history" and
+        handler_input.request_envelope.request.intent.name == "ask_for_a_memory" and
         handler_input.request_envelope.request.dialog_state.value == "STARTED")
 def before_starting_record_history_intent_handler(handler_input):
 
@@ -81,7 +81,7 @@ def before_starting_record_history_intent_handler(handler_input):
 
 @sb.request_handler(
     can_handle_func=lambda handler_input:
-        handler_input.request_envelope.request.intent.name == "record_history" and
+        handler_input.request_envelope.request.intent.name == "ask_for_a_memory" and
         handler_input.request_envelope.request.dialog_state.value == "IN_PROGRESS")
 def in_progress_record_history_intent_handler(handler_input):
     current_intent = handler_input.request_envelope.request.intent.name
@@ -93,7 +93,7 @@ def in_progress_record_history_intent_handler(handler_input):
 # def record_history_intent_handler(handler_input):
 @sb.request_handler(
     can_handle_func=lambda handler_input:
-        handler_input.request_envelope.request.intent.name == "record_history" and
+        handler_input.request_envelope.request.intent.name == "ask_for_a_memory" and
         handler_input.request_envelope.request.dialog_state.value == "COMPLETED")
 def completed_record_history_intent_handler(handler_input):
     """ Grab raw user text from AMAZON.custom_slot and write it to FS as a memory. """

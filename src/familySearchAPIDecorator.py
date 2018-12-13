@@ -30,7 +30,7 @@ class FSDecorator:
             response = requests.request("POST", url, data=payload, headers=headers, params=querystring)
 
             if response.status_code == 201:
-                speech_text = "The transcript of your story was successfully added to Family Search!" 
+                speech_text = "Your memory was successfully added to Family Search!" 
                 print speech_text
                 return speech_text
             elif response.status_code == 401:
